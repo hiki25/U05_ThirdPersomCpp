@@ -16,9 +16,18 @@ public:
 	virtual void End_DoAction() override;
 
 public:
+	void EnableCombo();
+	void DisableCombo();
+	void ClearHittedCharacter();
+
+public:
 		virtual void OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter) override;
 		virtual void OnAttachmentEndOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter) override;
 
 private:
 	int32 ComboCount = 0;
+	bool bCanCombo;
+	bool bSuccessCombo;
+
+	TArray<ACharacter*> HittedCharacters;
 };

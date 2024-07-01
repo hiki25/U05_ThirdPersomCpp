@@ -47,7 +47,10 @@ void UCActionComponent::SetUnArmedMode()
 		DataAssets[(int32)Type]->GetEquipment()->UnEquip();
 	}
 
-	DataAssets[(int32)EActionType::UnArmed]->GetEquipment()->Equip();
+	if (DataAssets[(int32)EActionType::UnArmed]&& DataAssets[(int32)EActionType::UnArmed]->GetEquipment())
+	{
+		DataAssets[(int32)EActionType::UnArmed]->GetEquipment()->Equip();
+	}
 
 	ChangeType(EActionType::UnArmed);
 }
