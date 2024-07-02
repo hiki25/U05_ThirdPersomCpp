@@ -31,6 +31,8 @@ protected:
 public:
 	void DoAction();
 
+	void OffAllCollision();
+
 public:
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool IsUnArmedMode() { return Type == EActionType::UnArmed; }

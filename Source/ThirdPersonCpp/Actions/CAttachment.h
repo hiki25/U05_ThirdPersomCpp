@@ -42,6 +42,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void ActorAttachTo(FName InSocketName);
 
+	UFUNCTION(BlueprintCallable)
+		void ComponentAttachTo(USceneComponent* InComp,FName InSocketName);
+
 public:
 	UPROPERTY(BlueprintAssignable)
 	FAttachmentBeginOverlap OnAttachmentBeginOverlap;

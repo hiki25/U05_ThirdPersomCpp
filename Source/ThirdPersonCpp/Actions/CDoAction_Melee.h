@@ -20,6 +20,10 @@ public:
 	void DisableCombo();
 	void ClearHittedCharacter();
 
+private:
+	UFUNCTION()
+	void RestoreGlobalTimeDilation();
+
 public:
 		virtual void OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter) override;
 		virtual void OnAttachmentEndOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter) override;

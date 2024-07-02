@@ -3,6 +3,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Materials/MaterialInstanceConstant.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/CAttributeComponent.h"
 #include "Components/CMontagesComponent.h"
@@ -168,7 +170,8 @@ void ACEnemy::Hitted()
 	//Look At Attack
 	FVector Start = GetActorLocation();
 	FVector Target = DamageInstigator->GetPawn()->GetActorLocation();
-	SetActorRotation(UKismetMathLibrary::FindLookAtRotation(Start,Target));
+	FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(Start, Target);
+	SetActorRotation(FRotator(0,Rotation.Yaw,0));
 
 	//Hit Back
 	FVector Direction = Start - Target;
@@ -184,6 +187,20 @@ void ACEnemy::Hitted()
 void ACEnemy::Dead()
 {
 	MontageComp->PlayDead();
+
+	//Widget Hide
+	NameWidgetComp->SetVisibility(false);
+	HealthWidgetComp->SetVisibility(false);
+
+	//Rag Doll
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetCollisionProfileName("Ragdoll");
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCharacterMovement()->DisableMovement();
+
+	//off All Collision
+	ActionComp->OffAllCollision();
+
 }
 
 void ACEnemy::RestoreLogoColor()
