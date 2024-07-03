@@ -110,6 +110,8 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 
 	PlayerInputComponent->BindAction("primaryAction", EInputEvent::IE_Pressed, this, &ACPlayer::OnPrimaryAction);
+	PlayerInputComponent->BindAction("SecondaryAction", EInputEvent::IE_Pressed, this, &ACPlayer::OnSecondaryAction);
+	PlayerInputComponent->BindAction("SecondaryAction", EInputEvent::IE_Released, this, &ACPlayer::OffSecondaryAction);
 }
 
 
@@ -205,6 +207,16 @@ void ACPlayer::OnMagicBall()
 void ACPlayer::OnPrimaryAction()
 {
 	ActionComp->DoAction();
+}
+
+void ACPlayer::OnSecondaryAction()
+{
+	ActionComp->DoSubAction(true);
+}
+
+void ACPlayer::OffSecondaryAction()
+{
+	ActionComp->DoSubAction(false);
 }
 
 void ACPlayer::Begin_Roll()

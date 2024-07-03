@@ -53,6 +53,8 @@ private:
 	void OnMagicBall();
 
 	void OnPrimaryAction();
+	void OnSecondaryAction();
+	void OffSecondaryAction();
 
 private:
 	void Begin_Roll();
