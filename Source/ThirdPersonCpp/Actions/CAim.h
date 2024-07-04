@@ -9,6 +9,7 @@ class ACharacter;
 class UCameraComponent;
 class USpringArmComponent;
 class UCurveFloat;
+class ACHUD;
 
 UCLASS()
 class THIRDPERSONCPP_API UCAim : public UObject
@@ -24,7 +25,8 @@ public:
 	void On();
 	void Off();
 
-	FORCEINLINE bool CanAim() {return SpringArmComp != nullptr && CameraComp != nullptr; };
+	FORCEINLINE bool CanAim() {return SpringArmComp != nullptr && CameraComp != nullptr; }
+	FORCEINLINE bool InZooming() { return bZooming; }
 
 private:
 	UFUNCTION()
@@ -37,6 +39,8 @@ private:
 	UCurveFloat* Curve;
 
 	FTimeline Timeline;
+
+	ACHUD* HUD;
 
 	bool bZooming;
 };

@@ -11,6 +11,7 @@ class ACAttachment;
 class UParticleSystem;
 class UCameraShake;
 class ACDoAction;
+class ACProjectile;
 
 USTRUCT(BlueprintType)
 struct FEquipmentData
@@ -57,6 +58,8 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<UCameraShake> ShakeClass;
 
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<ACProjectile> ProjectileClass;
 };
 
 UCLASS()

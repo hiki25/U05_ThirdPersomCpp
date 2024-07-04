@@ -136,6 +136,19 @@ void UCActionComponent::ChangeType(EActionType InNewType)
 	EActionType Prev = Type;
 	Type = InNewType;
 
+	//
+	//ACDoAction_MagicBall* DoAction_MagicBall = Cast<ACDoAction_MagicBall>(DataAssets[(int32)Type]->GetDoAction());
+	//if (ACDoAction_MagicBall)
+	//{
+	//	if (ACDoAction_MagicBall->GetAim()->CanAim())
+	//	{
+	//		if (ACDoAction_MagicBall->IsZooming())
+	//		{
+	//			ACDoAction_MagicBall->GetAim()->Off();
+	//		}
+	//	}
+	//}
+
 	if (OnActionTypeChanged.IsBound())
 	{
 		OnActionTypeChanged.Broadcast(Prev, InNewType);
