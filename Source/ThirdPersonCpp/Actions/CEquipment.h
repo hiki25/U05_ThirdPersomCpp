@@ -23,6 +23,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	FORCEINLINE const bool* IsEquipped() { return &bEquipped; }
+
 	void SetData(const FEquipmentData& InData);
 	void SetColor(const FLinearColor& InColor);
 
@@ -59,4 +61,6 @@ protected:
 private:
 	FEquipmentData Data;
 	FLinearColor Color;
+
+	bool bEquipped;
 };

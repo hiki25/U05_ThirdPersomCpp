@@ -26,7 +26,7 @@ public:
 	void Off();
 
 	FORCEINLINE bool CanAim() {return SpringArmComp != nullptr && CameraComp != nullptr; }
-	FORCEINLINE bool InZooming() { return bZooming; }
+	FORCEINLINE bool IsZooming() { return bZooming; }
 
 private:
 	UFUNCTION()

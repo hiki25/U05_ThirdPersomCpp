@@ -37,8 +37,13 @@ void UCActionData::BeginPlay(ACharacter* InOwnerCharacter)
 		DoAction = InOwnerCharacter->GetWorld()->SpawnActorDeferred<ACDoAction>(DoActionClass, Transform, InOwnerCharacter);
 		DoAction->SetData(DoActinoDatas);
 		DoAction->SetActorLabel(MakeActorLable(InOwnerCharacter, "DoAction"));
-		DoAction->AttachToComponent(InOwnerCharacter->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true),NAME_None);
+		DoAction->AttachToComponent(InOwnerCharacter->GetMesh(), FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), NAME_None);
 		DoAction->FinishSpawning(Transform);
+
+		if (Equipment)
+		{
+			DoAction->SetEquipment(Equipment->IsEquipped());
+		}
 
 		if (Attachment)
 		{

@@ -107,6 +107,7 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("OneHand", EInputEvent::IE_Pressed, this, &ACPlayer::OnOneHand);
 	PlayerInputComponent->BindAction("TwoHand", EInputEvent::IE_Pressed, this, &ACPlayer::OnTwoHand);
 	PlayerInputComponent->BindAction("MagicBall", EInputEvent::IE_Pressed, this, &ACPlayer::OnMagicBall);
+	PlayerInputComponent->BindAction("Warp", EInputEvent::IE_Pressed, this, &ACPlayer::OnWarp);
 
 
 	PlayerInputComponent->BindAction("primaryAction", EInputEvent::IE_Pressed, this, &ACPlayer::OnPrimaryAction);
@@ -202,6 +203,12 @@ void ACPlayer::OnMagicBall()
 {
 	CheckFalse(StateComp->IsIdleMode());
 	ActionComp->SetMagicBallMode();
+}
+
+void ACPlayer::OnWarp()
+{
+	CheckFalse(StateComp->IsIdleMode());
+	ActionComp->SetWarpMode();
 }
 
 void ACPlayer::OnPrimaryAction()
