@@ -29,5 +29,6 @@ private:
 	USkeletalMeshComponent* PreviewMesh;
 
 	FVector Location;
+	bool bCanWarp;
 	
 };

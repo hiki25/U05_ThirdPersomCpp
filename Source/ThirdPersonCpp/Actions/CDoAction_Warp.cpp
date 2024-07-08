@@ -35,12 +35,18 @@ void ACDoAction_Warp::Tick(float DeltaTime)
 	{
 		PreviewMesh->SetWorldLocation(CurLoc);
 		PreviewMesh->SetVisibility(true);
+		bCanWarp = true;
+	}
+	else
+	{
+		bCanWarp = false;
 	}
 
 }
 
 void ACDoAction_Warp::DoAction()
 {
+	CheckFalse(bCanWarp);
 	Super::DoAction();
 
 	CheckFalse(StateComponent->IsIdleMode());
@@ -62,7 +68,7 @@ void ACDoAction_Warp::Begin_DoAction()
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),Datas[0].Effect,Transform);
 
-	PreviewMesh->SetVectorParameterValueOnMaterials("Emissive",FVector(0,0,20) );
+	PreviewMesh->SetVectorParameterValueOnMaterials("Emissive",FVector(20,0,0) );
 }
 
 void ACDoAction_Warp::End_DoAction()
@@ -76,7 +82,7 @@ void ACDoAction_Warp::End_DoAction()
 	StateComponent->SetIdleMode();
 	AttributeComponent->SetMove();
 
-	PreviewMesh->SetVectorParameterValueOnMaterials("Emissive", FVector(20, 0, 0));
+	PreviewMesh->SetVectorParameterValueOnMaterials("Emissive", FVector(0, 0, 20));
 }
 
 bool ACDoAction_Warp::GetCursorLoactionAndRotation(FVector& OutLocation, FRotator& OutRotation)
