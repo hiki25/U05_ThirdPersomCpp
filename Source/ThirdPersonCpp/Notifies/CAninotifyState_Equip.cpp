@@ -2,6 +2,7 @@
 #include "Global.h"
 #include "Components/CActionComponent.h"
 #include "Actions/CActionData.h"
+#include "Actions/CAction.h"
 #include "Actions/CEquipment.h"
 
 FString UCAninotifyState_Equip::GetNotifyName_Implementation() const
@@ -17,7 +18,7 @@ void UCAninotifyState_Equip::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnim
 	UCActionComponent* ActionComp = CHelpers::GetComponent<UCActionComponent>(MeshComp->GetOwner());
 	CheckNull(ActionComp);
 
-	UCActionData* ActionData = ActionComp->GetCurrentActionData();
+	UCAction* ActionData = ActionComp->GetCurrentActionData();
 	CheckNull(ActionData);
 
 	ACEquipment* Equipment = ActionData->GetEquipment();
@@ -35,7 +36,7 @@ void UCAninotifyState_Equip::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSe
 	UCActionComponent* ActionComp = CHelpers::GetComponent<UCActionComponent>(MeshComp->GetOwner());
 	CheckNull(ActionComp);
 
-	UCActionData* ActionData = ActionComp->GetCurrentActionData();
+	UCAction* ActionData = ActionComp->GetCurrentActionData();
 	CheckNull(ActionData);
 
 	ACEquipment* Equipment = ActionData->GetEquipment();

@@ -12,6 +12,7 @@
 #include "Widgets/CEnenyNameWidget.h"
 #include "Widgets/CEnemyHealth.h"
 #include "Actions/CActionData.h"
+#include "Actions/CAction.h"
 
 ACEnemy::ACEnemy()
 {

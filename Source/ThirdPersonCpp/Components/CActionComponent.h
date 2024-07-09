@@ -5,6 +5,7 @@
 #include "CActionComponent.generated.h"
 
 class UCActionData;
+class UCAction;
 
 
 
@@ -56,7 +57,10 @@ public:
 
 public:
 	UFUNCTION(BlueprintPure)
-		FORCEINLINE UCActionData* GetCurrentActionData() { return DataAssets[(int32)Type]; }
+		FORCEINLINE UCAction* GetCurrentActionData() { return Datas[(int32)Type]; }
+
+	UFUNCTION(BlueprintPure)
+		FORCEINLINE UCActionData* GetCurrentActionDataAssets() { return DataAssets[(int32)Type]; }
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -93,6 +97,9 @@ private:
 
 private:
 	EActionType Type;
+
+	UPROPERTY()
+	UCAction* Datas[(int32)EActionType::Max];
 
 
 		
