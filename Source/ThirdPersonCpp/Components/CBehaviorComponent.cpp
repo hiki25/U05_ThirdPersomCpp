@@ -1,12 +1,7 @@
 #include "CBehaviorComponent.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "Characteres/CPlayer.h"
 
 UCBehaviorComponent::UCBehaviorComponent()
 {
-	BehaviorKey = "BehaviorKey";
-	PlayerKey = "PlayerKey";
-	LocationKey = "LocationKey";
 }
 
 
@@ -24,80 +19,71 @@ void UCBehaviorComponent::SetBlackboardComp(UBlackboardComponent* InBlackboardCo
 
 bool UCBehaviorComponent::IsWaitMode()
 {
-	return GetType() == EBehaviorType::Wait;
+	return false;
 }
 
 bool UCBehaviorComponent::IsApprochMode()
 {
-	return GetType() == EBehaviorType::Approch;
+	return false;
 }
 
 bool UCBehaviorComponent::IsActionMode()
 {
-	return GetType() == EBehaviorType::Action;
+	return false;
 }
 
 bool UCBehaviorComponent::IsPatrolMode()
 {
-	return GetType() == EBehaviorType::Patrol;
+	return false;
 }
 
 bool UCBehaviorComponent::IsHittedMode()
 {
-	return GetType() == EBehaviorType::Hitted;
+	return false;
 }
 
 bool UCBehaviorComponent::IsEscapeMode()
 {
-	return GetType() == EBehaviorType::Escape;
+	return false;
 }
 
 void UCBehaviorComponent::SetWaitMode()
 {
-	ChangeType(EBehaviorType::Wait);
 }
 
 void UCBehaviorComponent::SetApprochMode()
 {
-	ChangeType(EBehaviorType::Approch);
 }
 
 void UCBehaviorComponent::SetActionMode()
 {
-	ChangeType(EBehaviorType::Action);
 }
 
 void UCBehaviorComponent::SetPatrolMode()
 {
-	ChangeType(EBehaviorType::Patrol);
 }
 
 void UCBehaviorComponent::SetHittedMode()
 {
-	ChangeType(EBehaviorType::Hitted);
 }
 
 void UCBehaviorComponent::SetEscapeMode()
 {
-	ChangeType(EBehaviorType::Escape);
-}
-
-ACPlayer* UCBehaviorComponent::GetPlayerKey()
-{
-	return Cast<ACPlayer>(BlackboardComp->GetValueAsObject(PlayerKey));
-}
-
-FVector UCBehaviorComponent::GetLocationKey()
-{
-	return BlackboardComp->GetValueAsVector(LocationKey);
 }
 
 void UCBehaviorComponent::ChangeType(EBehaviorType InNewType)
 {
-	BlackboardComp->SetValueAsEnum(BehaviorKey,(uint8)InNewType);
 }
 
 EBehaviorType UCBehaviorComponent::GetType()
 {
-	return (EBehaviorType)BlackboardComp->GetValueAsEnum(BehaviorKey);
+	return EBehaviorType();
 }
+
+
+void UCBehaviorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+}
+
