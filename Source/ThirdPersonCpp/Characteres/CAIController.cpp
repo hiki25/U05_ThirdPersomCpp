@@ -6,6 +6,7 @@
 #include "Perception/AISenseConfig_Sight.h"
 #include "Components/CBehaviorComponent.h"
 #include "CEnemy_AI.h"
+#include "CPlayer.h"
 
 ACAIController::ACAIController()
 {
