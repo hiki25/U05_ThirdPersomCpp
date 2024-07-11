@@ -63,7 +63,8 @@ ACEnemy::ACEnemy()
 	//GetDissolve CurveAsset
 	CHelpers::GetAsset(&DissolveCurve, "/Game/Game/Curve_Dissolve");
 
-
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECR_Ignore);
 }
 
 void ACEnemy::BeginPlay()
@@ -119,6 +120,8 @@ void ACEnemy::BeginPlay()
 	FOnTimelineEvent OnFinishDelegate;
 	OnFinishDelegate.BindUFunction(this, "EndDissolve");
 	DissolveTime.SetTimelineFinishedFunc(OnFinishDelegate);
+
+	
 	
 }
 
