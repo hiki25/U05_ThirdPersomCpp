@@ -13,7 +13,8 @@ public class ThirdPersonCpp : ModuleRules
 			"Engine",
 			"InputCore",
 			"AIModule" ,
-			"GameplayTasks"});
+			"GameplayTasks",
+		"UMG"});
 
 	}
 }

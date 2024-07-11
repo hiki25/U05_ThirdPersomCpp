@@ -9,8 +9,10 @@
 #include "Components/COptionComponent.h"
 #include "Components/CMontagesComponent.h"
 #include "Components/CActionComponent.h"
+#include "Widgets/CWeaponeWidget.h"
 #include "Actions/CActionData.h"
 #include "Actions/CAction.h"
+#include "Blueprint/UserWidget.h"
 
 ACPlayer::ACPlayer()
 {
@@ -49,6 +51,18 @@ ACPlayer::ACPlayer()
 	GetCharacterMovement()->MaxWalkSpeed = AttributeComp->GetSprintSpeed();
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
+
+	TSubclassOf<UUserWidget> WidgetTemplate;
+	CHelpers::GetClass<UUserWidget>(&WidgetTemplate, "/Game/Widgets/WB_WeaponeSelet");
+
+	if (WidgetTemplate)
+	{
+		if (!WeaponeInstance)
+		{
+			WeaponeInstance = CreateWidget<UCWeaponeWidget>(GetWorld(),WidgetTemplate);
+			
+		}
+	}
 }
 
 void ACPlayer::BeginPlay()
@@ -73,7 +87,12 @@ void ACPlayer::BeginPlay()
 	}
 
 	ActionComp->SetUnArmedMode();
+	if (WeaponeInstance)
+	{
+		WeaponeInstance->AddToViewport();
+		WeaponeInstance->SetVisibility(ESlateVisibility::Hidden);
 
+	}
 	
 }
 
@@ -115,6 +134,9 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("primaryAction", EInputEvent::IE_Pressed, this, &ACPlayer::OnPrimaryAction);
 	PlayerInputComponent->BindAction("SecondaryAction", EInputEvent::IE_Pressed, this, &ACPlayer::OnSecondaryAction);
 	PlayerInputComponent->BindAction("SecondaryAction", EInputEvent::IE_Released, this, &ACPlayer::OffSecondaryAction);
+
+	PlayerInputComponent->BindAction("WeaponeWidget", EInputEvent::IE_Pressed, this, &ACPlayer::OnWeaponeWidget);
+	PlayerInputComponent->BindAction("WeaponeWidget", EInputEvent::IE_Released, this, &ACPlayer::OffWeaponeWidget);
 }
 
 FGenericTeamId ACPlayer::GetGenericTeamId() const
@@ -237,6 +259,31 @@ void ACPlayer::OnSecondaryAction()
 void ACPlayer::OffSecondaryAction()
 {
 	ActionComp->DoSubAction(false);
+}
+
+void ACPlayer::OnWeaponeWidget()
+{
+	CheckFalse(StateComp->IsIdleMode());
+
+	WeaponeInstance->SetVisibility(ESlateVisibility::Visible);
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+
+	PC->SetInputMode(FInputModeGameAndUI());
+	PC->bShowMouseCursor = true;
+	
+	UGameplayStatics::SetGlobalTimeDilation(GetWorld(),0.1f);
+	
+}
+
+void ACPlayer::OffWeaponeWidget()
+{
+	WeaponeInstance->SetVisibility(ESlateVisibility::Hidden);
+
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	
+	PC->SetInputMode(FInputModeGameOnly());
+	PC->bShowMouseCursor = false;
+	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f);
 }
 
 void ACPlayer::Begin_Roll()

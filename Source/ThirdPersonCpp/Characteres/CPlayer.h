@@ -15,6 +15,7 @@ class UCStateComponent;
 class UCMontagesComponent;
 class UCActionComponent;
 class UMaterialInstanceDynamic;
+class UCWeaponeWidget;
 
 UCLASS()
 class THIRDPERSONCPP_API ACPlayer : public ACharacter, public ICCharacterInterface, public IGenericTeamAgentInterface
@@ -32,6 +33,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual FGenericTeamId GetGenericTeamId() const override;
 
+public:
+	FORCEINLINE const bool* GetSwipWeapone() { return &bSwipWepone; }
 
 public:
 	void ChangeBodyColor(FLinearColor InColor) override;
@@ -59,6 +62,9 @@ private:
 	void OnPrimaryAction();
 	void OnSecondaryAction();
 	void OffSecondaryAction();
+
+	void OnWeaponeWidget();
+	void OffWeaponeWidget();
 
 private:
 	void Begin_Roll();
@@ -94,6 +100,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
 	UCActionComponent* ActionComp;
 
+
+
+	UPROPERTY()
+		UCWeaponeWidget* WeaponeInstance;
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "TeamID")
 	uint8 TeamID;
@@ -101,4 +112,6 @@ private:
 private:
 	UMaterialInstanceDynamic* BodyMaterial;
 	UMaterialInstanceDynamic* LogoMaterial;
+
+	bool bSwipWepone;
 };

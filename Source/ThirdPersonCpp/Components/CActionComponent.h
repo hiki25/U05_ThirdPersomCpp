@@ -84,6 +84,7 @@ public:
 	void SetWhirlWindMode();
 
 private:
+	UFUNCTION(BlueprintCallable)
 	void SetMode(EActionType InNewType);
 	void ChangeType(EActionType InNewType);
 
