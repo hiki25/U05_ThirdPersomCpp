@@ -1,30 +1,28 @@
-#include "CBTService_Melee.h"
+#include "CBTService_Widzard.h"
 #include "Global.h"
 #include "Characteres/CAIController.h"
 #include "Characteres/CEnemy_AI.h"
 #include "Characteres/CPlayer.h"
 #include "Components/CBehaviorComponent.h"
 #include "Components/CStateComponent.h"
-#include "Components/CPatrolComponent.h"
 
-
-UCBTService_Melee::UCBTService_Melee()
+UCBTService_Widzard::UCBTService_Widzard()
 {
-	NodeName = "Root_Melee";
+	NodeName = "Root_Wizard";
 }
 
-void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+void UCBTService_Widzard::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
+	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 	ACAIController* AIC = Cast<ACAIController>(OwnerComp.GetOwner());
 	CheckNull(AIC);
 
 	UCBehaviorComponent* BehaviorComp = CHelpers::GetComponent<UCBehaviorComponent>(AIC);
 
-	ACEnemy_AI*  EnemyPawn= Cast<ACEnemy_AI>(AIC->GetPawn());
+	ACEnemy_AI* EnemyPawn = Cast<ACEnemy_AI>(AIC->GetPawn());
 	CheckNull(EnemyPawn);
 
 	UCStateComponent* StateComp = CHelpers::GetComponent<UCStateComponent>(EnemyPawn);
-	UCPatrolComponent* PatrolComp = CHelpers::GetComponent<UCPatrolComponent>(EnemyPawn);
 
 	//Is Hitted
 	if (StateComp->IsHittedMode())
@@ -33,36 +31,32 @@ void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 		return;
 	}
 
-	//Try Get PlayerKey from BB
 	ACPlayer* Player = BehaviorComp->GetPlayerKey();
 
-	//No Sense
 	if (Player == nullptr)
 	{
-	AIC->ClearFocus(EAIFocusPriority::Gameplay);
-		if (PatrolComp->IsPathValid())
-		{
-			BehaviorComp->SetPatrolMode();
-			return;
-		}
-
 		BehaviorComp->SetWaitMode();
+		AIC->ClearFocus(EAIFocusPriority::Gameplay);
+
 		return;
 	}
 
-	//Sensed Player
+	//Sense Player
+	AIC->SetFocus(Player);
+
 	float Distance = EnemyPawn->GetDistanceTo(Player);
 
+	//Player in Escape Zone
 	if (Distance < AIC->GetBehaviorRange())
+	{
+		BehaviorComp->SetEscapeMode();
+		return;
+	}
+
+	//Player in Sight Zone
+	if (Distance < AIC->GetSightRadius())
 	{
 		BehaviorComp->SetActionMode();
 		return;
 	}
-
-	if (Distance < AIC->GetSightRadius())
-	{
-		BehaviorComp->SetApprochMode();
-	}
-
-
 }

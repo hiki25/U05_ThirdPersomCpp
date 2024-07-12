@@ -24,7 +24,8 @@ EBTNodeResult::Type UCBTTaskNode_Action::ExecuteTask(UBehaviorTreeComponent& Own
 	APawn* Pawn = AIC->GetPawn();
 	CheckNullResult(Pawn, EBTNodeResult::Failed);
 
-	AIC->SetFocus(nullptr);
+	UCBehaviorComponent* BehaviorComp = CHelpers::GetComponent<UCBehaviorComponent>(AIC);
+	AIC->SetFocus(BehaviorComp->GetPlayerKey());
 
 	UCActionComponent* ActionComp = CHelpers::GetComponent<UCActionComponent>(Pawn);
 	ActionComp->DoAction();
@@ -48,12 +49,10 @@ void UCBTTaskNode_Action::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 	UCStateComponent* StateComp = CHelpers::GetComponent<UCStateComponent>(Pawn);
 
 	
-
 	ElapsedTime += DeltaSeconds;
 	if (StateComp->IsIdleMode() && ElapsedTime > Delay)
 	{
-		UCBehaviorComponent* BehaviorComp = CHelpers::GetComponent<UCBehaviorComponent>(AIC);
-		AIC->SetFocus(BehaviorComp->GetPlayerKey());
+		
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 }
