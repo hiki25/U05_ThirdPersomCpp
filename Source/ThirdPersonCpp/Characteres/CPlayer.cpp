@@ -9,6 +9,7 @@
 #include "Components/COptionComponent.h"
 #include "Components/CMontagesComponent.h"
 #include "Components/CActionComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Actions/CActionData.h"
 #include "Actions/CAction.h"
 
@@ -89,6 +90,25 @@ void ACPlayer::ChangeBodyColor(FLinearColor InColor)
 	LogoMaterial->SetVectorParameterValue("BodyColor", InColor);
 }
 
+float ACPlayer::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	DamageValue = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+	DamageInstigator = EventInstigator;
+
+	ActionComp->Abort();
+	AttributeComp->DecreaseHealth(Damage);
+
+	if (AttributeComp->GetCurrentHealth() <= 0)
+	{
+		StateComp->SetDeadMode();
+		return 0.0f;
+	}
+
+	StateComp->SetHittedMode();
+
+	return DamageValue;
+}
+
 void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -115,6 +135,11 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("primaryAction", EInputEvent::IE_Pressed, this, &ACPlayer::OnPrimaryAction);
 	PlayerInputComponent->BindAction("SecondaryAction", EInputEvent::IE_Pressed, this, &ACPlayer::OnSecondaryAction);
 	PlayerInputComponent->BindAction("SecondaryAction", EInputEvent::IE_Released, this, &ACPlayer::OffSecondaryAction);
+}
+
+FGenericTeamId ACPlayer::GetGenericTeamId() const
+{
+	return FGenericTeamId(TeamID);
 }
 
 
@@ -234,6 +259,33 @@ void ACPlayer::OffSecondaryAction()
 	ActionComp->DoSubAction(false);
 }
 
+void ACPlayer::Hitted()
+{
+	MontageComp->PlayHitted();
+	AttributeComp->SetStop();
+}
+
+void ACPlayer::Dead()
+{
+	MontageComp->PlayDead();
+
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetCollisionProfileName("Ragdoll");
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCharacterMovement()->DisableMovement();
+
+	//off All Collision & Destory
+	ActionComp->OffAllCollision();
+
+	UGameplayStatics::SetGlobalTimeDilation(GetWorld(),0.25f);
+	UKismetSystemLibrary::K2_SetTimer(this, "EndDead",2.f,false);
+}
+
+void ACPlayer::EndDead()
+{
+	CLog::Print("Game Over");
+}
+
 void ACPlayer::Begin_Roll()
 {
 	bUseControllerRotationYaw = false;
@@ -318,6 +370,16 @@ void ACPlayer::OnStateTypeChanged(EStateType InPreType, EStateType InNewType)
 	case EStateType::Backstep:
 	{
 		Begin_Backstep();
+		break;
+	}
+	case EStateType::Hitted:
+	{
+		Hitted();
+		break;
+	}
+	case EStateType::Dead:
+	{
+		Dead();
 		break;
 	}
 	

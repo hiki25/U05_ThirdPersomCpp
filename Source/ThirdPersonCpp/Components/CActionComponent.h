@@ -35,6 +35,9 @@ public:
 	void DoSubAction(bool bBegin);
 
 	void OffAllCollision();
+	void DestoryAll();
+
+	void Abort();
 
 public:
 	UFUNCTION(BlueprintPure)

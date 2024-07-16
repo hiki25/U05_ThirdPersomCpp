@@ -7,7 +7,13 @@ public class ThirdPersonCpp : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicIncludePaths.Add(ModuleDirectory);
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore","AIModule" });
+		PublicDependencyModuleNames.AddRange(new string[] 
+		{ "Core", 
+			"CoreUObject",
+			"Engine",
+			"InputCore",
+			"AIModule" ,
+			"GameplayTasks"});
 
 	}
 }

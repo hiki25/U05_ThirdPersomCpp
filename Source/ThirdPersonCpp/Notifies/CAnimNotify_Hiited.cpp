@@ -1,6 +1,7 @@
 #include "CAnimNotify_Hiited.h"
 #include "Global.h"
 #include "Components/CStateComponent.h"
+#include "Components/CAttributeComponent.h"
 
 FString UCAnimNotify_Hiited::GetNotifyName_Implementation() const
 {
@@ -14,6 +15,9 @@ void UCAnimNotify_Hiited::Notify(USkeletalMeshComponent* MeshComp, UAnimSequence
 
 	UCStateComponent* StateComp = CHelpers::GetComponent<UCStateComponent>(MeshComp->GetOwner());
 	CheckNull(StateComp);
+	UCAttributeComponent* AttibuteComp = CHelpers::GetComponent<UCAttributeComponent>(MeshComp->GetOwner());
+	CheckNull(AttibuteComp);
 
 	StateComp->SetIdleMode();
+	AttibuteComp->SetMove();
 }

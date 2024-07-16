@@ -1,10 +1,12 @@
 #include "CDoAction_Warp.h"
 #include "Global.h"
+#include "GameFramework/GamemodeBase.h"
 #include "GameFramework/Character.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/CStateComponent.h"
 #include "Components/CAttributeComponent.h"
-#include "Components/CapsuleComponent.h"
+#include "Components/CBehaviorComponent.h"
 #include "CAttachment.h"
 
 void ACDoAction_Warp::BeginPlay()
@@ -15,60 +17,70 @@ void ACDoAction_Warp::BeginPlay()
 	{
 		if (Child->IsA<ACAttachment>() && Child->GetActorLabel().Contains("Warp"))
 		{
-			PreviewMesh = CHelpers::GetComponent<USkeletalMeshComponent>(Child);
+			PreviewMeshComp = CHelpers::GetComponent<USkeletalMeshComponent>(Child);
 			break;
 		}
 	}
+
 }
 
 void ACDoAction_Warp::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	PreviewMesh->SetVisibility(false);
 
+	PreviewMeshComp->SetVisibility(false);
 
 	CheckFalse(*bEquipped);
+	CheckFalse(IsPlayerClass());
+	
 
 	FVector CurLoc;
 	FRotator CurRot;
-	if (GetCursorLoactionAndRotation(CurLoc,CurRot))
+	if (GetCursorLocationAndRotation(CurLoc, CurRot))
 	{
-		PreviewMesh->SetWorldLocation(CurLoc);
-		PreviewMesh->SetVisibility(true);
-		bCanWarp = true;
-	}
-	else
-	{
-		bCanWarp = false;
+		PreviewMeshComp->SetVisibility(true);
+		PreviewMeshComp->SetWorldLocation(CurLoc);
 	}
 
 }
 
 void ACDoAction_Warp::DoAction()
 {
-	CheckFalse(bCanWarp);
 	Super::DoAction();
 
 	CheckFalse(StateComponent->IsIdleMode());
+	if (IsPlayerClass())
+	{
+		FRotator Temp;
+		CheckFalse(GetCursorLocationAndRotation(Location, Temp));
+	}
+	else
+	{
+		AController* AIC =  OwnerCharacter->GetController();
+		if (AIC)
+		{
+			UCBehaviorComponent* BehaviorComp = CHelpers::GetComponent<UCBehaviorComponent>(AIC);
+			if (BehaviorComp)
+			{
+				Location = BehaviorComp->GetLocationKey();
+			}
+		}
+	}
+
 	StateComponent->SetActionMode();
-
-	FRotator Temp;
-	CheckFalse(GetCursorLoactionAndRotation(Location, Temp));
-
 	OwnerCharacter->PlayAnimMontage(Datas[0].AnimMontage, Datas[0].PlayRate, Datas[0].StartSection);
 	Datas[0].bCanMove ? AttributeComponent->SetMove() : AttributeComponent->SetStop();
+
+	SetPreviewMeshColor(FLinearColor(20, 0, 0));
 }
 
 void ACDoAction_Warp::Begin_DoAction()
 {
 	Super::Begin_DoAction();
 
-	FTransform Transform = Datas[0].EffectTransform;
-	Transform.AddToTranslation(OwnerCharacter->GetActorLocation());
-
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),Datas[0].Effect,Transform);
-
-	PreviewMesh->SetVectorParameterValueOnMaterials("Emissive",FVector(20,0,0) );
+	FTransform Trasnform = Datas[0].EffectTransform;
+	Trasnform.AddToTranslation(OwnerCharacter->GetActorLocation());
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Datas[0].Effect, Trasnform);
 }
 
 void ACDoAction_Warp::End_DoAction()
@@ -76,25 +88,22 @@ void ACDoAction_Warp::End_DoAction()
 	Super::End_DoAction();
 
 	Location.Z += OwnerCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
-
 	OwnerCharacter->SetActorLocation(Location);
 
 	StateComponent->SetIdleMode();
 	AttributeComponent->SetMove();
 
-	PreviewMesh->SetVectorParameterValueOnMaterials("Emissive", FVector(0, 0, 20));
+	SetPreviewMeshColor(FLinearColor(0, 20, 20));
 }
 
-bool ACDoAction_Warp::GetCursorLoactionAndRotation(FVector& OutLocation, FRotator& OutRotation)
+bool ACDoAction_Warp::GetCursorLocationAndRotation(FVector& OutLocation, FRotator& OutRotation)
 {
-
 	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 	ObjectTypes.Add(ObjectTypeQuery1);
 
 	FHitResult Hit;
-
 	if (PC->GetHitResultUnderCursorForObjects(ObjectTypes, true, Hit))
 	{
 		OutLocation = Hit.Location;
@@ -104,4 +113,16 @@ bool ACDoAction_Warp::GetCursorLoactionAndRotation(FVector& OutLocation, FRotato
 	}
 
 	return false;
+}
+
+
+void ACDoAction_Warp::SetPreviewMeshColor(FLinearColor InColor)
+{
+	FVector FromColor = FVector(InColor.R, InColor.G, InColor.B);
+	PreviewMeshComp->SetVectorParameterValueOnMaterials("Emissive", FromColor);
+}
+
+bool ACDoAction_Warp::IsPlayerClass()
+{
+	return (OwnerCharacter->GetClass() == GetWorld()->GetAuthGameMode()->DefaultPawnClass);
 }

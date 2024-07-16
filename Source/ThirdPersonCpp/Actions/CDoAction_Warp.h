@@ -23,12 +23,12 @@ public:
 	virtual void End_DoAction() override;
 
 private:
-	bool GetCursorLoactionAndRotation(FVector& OutLocation, FRotator& OutRotation);
+	bool GetCursorLocationAndRotation(FVector& OutLocation, FRotator& OutRotation);
+	void SetPreviewMeshColor(FLinearColor InColor);
+	bool IsPlayerClass();
 
 private:
-	USkeletalMeshComponent* PreviewMesh;
+	USkeletalMeshComponent* PreviewMeshComp;
 
 	FVector Location;
-	bool bCanWarp;
-	
 };

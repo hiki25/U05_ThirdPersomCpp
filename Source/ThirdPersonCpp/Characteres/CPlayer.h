@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 #include "Components/CStateComponent.h"
 #include "Interfaces/CCharacterInterface.h"
+#include "GenericTeamAgentInterface.h"
 #include "CPlayer.generated.h"
 
 class USpringArmComponent;
@@ -16,7 +17,7 @@ class UCActionComponent;
 class UMaterialInstanceDynamic;
 
 UCLASS()
-class THIRDPERSONCPP_API ACPlayer : public ACharacter, public ICCharacterInterface
+class THIRDPERSONCPP_API ACPlayer : public ACharacter, public ICCharacterInterface, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -28,11 +29,13 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
-
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual FGenericTeamId GetGenericTeamId() const override;
+
 
 public:
 	void ChangeBodyColor(FLinearColor InColor) override;
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 private:
 	void OnMoveForward(float Axix);
@@ -57,6 +60,12 @@ private:
 	void OnPrimaryAction();
 	void OnSecondaryAction();
 	void OffSecondaryAction();
+
+	void Hitted();
+	void Dead();
+
+	UFUNCTION()
+	void EndDead();
 
 private:
 	void Begin_Roll();
@@ -93,6 +102,13 @@ protected:
 	UCActionComponent* ActionComp;
 
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "TeamID")
+	uint8 TeamID;
+
+private:
 	UMaterialInstanceDynamic* BodyMaterial;
 	UMaterialInstanceDynamic* LogoMaterial;
+
+	float DamageValue;
+	AController* DamageInstigator;
 };

@@ -52,6 +52,7 @@ ACEnemy::ACEnemy()
 	NameWidgetComp->SetRelativeLocation(FVector(0, 0, 240));
 	NameWidgetComp->SetDrawSize(FVector2D(240, 30));
 	NameWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
+	NameWidgetComp->SetVisibility(bVisibleNameWidget);
 
 	TSubclassOf<UCEnemyHealth> HealthWidgetAsset;
 	CHelpers::GetClass(&HealthWidgetAsset, "/Game/Widgets/WB_EnemyHealth");
@@ -154,6 +155,7 @@ float ACEnemy::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AContro
 	DamageValue = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	DamageInstigator = EventInstigator;
 
+	ActionComp->Abort();
 	AttributeComp->DecreaseHealth(Damage);
 
 	if (AttributeComp->GetCurrentHealth() <= 0)
@@ -230,8 +232,9 @@ void ACEnemy::Dead()
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetCharacterMovement()->DisableMovement();
 
-	//off All Collision
+	//off All Collision & Destory
 	ActionComp->OffAllCollision();
+
 
 	//SetDissolve
 	FLinearColor EquipmentColor = FLinearColor::Black;
@@ -261,6 +264,7 @@ void ACEnemy::StartDissolve(float InOutput)
 	CheckNull(DissolveMaterial);
 
 	DissolveMaterial->SetScalarParameterValue("Amount", InOutput);
+	ActionComp->DestoryAll();
 }
 
 void ACEnemy::EndDissolve()

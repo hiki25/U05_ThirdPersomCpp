@@ -5,6 +5,7 @@
 #include "CBehaviorComponent.generated.h"
 
 class UBlackboardComponent;
+class ACPlayer;
 
 UENUM(BlueprintType)
 enum class EBehaviorType : uint8
@@ -48,9 +49,23 @@ public:
 	void SetHittedMode();
 	void SetEscapeMode();
 
+	ACPlayer* GetPlayerKey();
+	FVector GetLocationKey();
+
 private:
 	void ChangeType(EBehaviorType InNewType);
 	EBehaviorType GetType();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Blackboard")
+	FName BehaviorKey;
+
+	//Read Only
+	UPROPERTY(EditDefaultsOnly, Category = "Blackboard")
+	FName PlayerKey;
+
+	//EQS, Read Only
+	UPROPERTY(EditDefaultsOnly, Category = "Blackboard")
+	FName LocationKey;
 
 private:
 	UBlackboardComponent* BlackboardComp;
