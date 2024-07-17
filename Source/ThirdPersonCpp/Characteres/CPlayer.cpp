@@ -5,6 +5,8 @@
 #include "Materials/MaterialInstanceConstant.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Camera/CameraComponent.h"
+#include "Blueprint/UserWidget.h"
+#include "Components/PostProcessComponent.h"
 #include "Components/CAttributeComponent.h"
 #include "Components/COptionComponent.h"
 #include "Components/CMontagesComponent.h"
@@ -20,6 +22,7 @@ ACPlayer::ACPlayer()
 	//Create Scene Component
 	CHelpers::CreateSceneComponent<USpringArmComponent>(this,&SpringArmComp,"SpringArmComp",GetMesh());
 	CHelpers::CreateSceneComponent<UCameraComponent>(this,&CameraComp,"CameraComp", SpringArmComp);
+	CHelpers::CreateSceneComponent<UPostProcessComponent>(this,&PostProcessComp,"PostProcessComp", GetRootComponent());
 
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -80));
@@ -40,6 +43,7 @@ ACPlayer::ACPlayer()
 	CHelpers::GetClass<UAnimInstance>(&AnimInstanceClass,"/Game/Character/Player/ABP_Player");
 	GetMesh()->SetAnimInstanceClass(AnimInstanceClass);
 
+	//SpringArm Setting
 	SpringArmComp->SetRelativeRotation(FRotator(0, +90, 0));
 	SpringArmComp->SetRelativeLocation(FVector(0, 0, 140));
 	SpringArmComp->TargetArmLength = 200.0f;
@@ -50,6 +54,16 @@ ACPlayer::ACPlayer()
 	GetCharacterMovement()->MaxWalkSpeed = AttributeComp->GetSprintSpeed();
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
+
+	//PostProcess Setting
+	PostProcessComp->Settings.bOverride_VignetteIntensity = false;
+	PostProcessComp->Settings.VignetteIntensity = 2.f;
+
+	PostProcessComp->Settings.bOverride_DepthOfFieldFocalDistance = false;
+	PostProcessComp->Settings.DepthOfFieldFocalDistance = 2.f;
+
+	CHelpers::GetClass<UUserWidget>(&DeadWidgetClass, "/Game/Widgets/WB_Dead");
+
 }
 
 void ACPlayer::BeginPlay()
@@ -276,6 +290,11 @@ void ACPlayer::Dead()
 
 	//off All Collision & Destory
 	ActionComp->OffAllCollision();
+	DisableInput(GetController<APlayerController>());
+	
+	//Enable PostProcess
+	PostProcessComp->Settings.bOverride_VignetteIntensity = true;
+	PostProcessComp->Settings.bOverride_DepthOfFieldFocalDistance = true;
 
 	UGameplayStatics::SetGlobalTimeDilation(GetWorld(),0.25f);
 	UKismetSystemLibrary::K2_SetTimer(this, "EndDead",2.f,false);
@@ -283,7 +302,17 @@ void ACPlayer::Dead()
 
 void ACPlayer::EndDead()
 {
-	CLog::Print("Game Over");
+	ensure(DeadWidgetClass);
+	APlayerController* PC = Cast<APlayerController>(GetController());
+	ensure(PC);
+
+	DeadWidget = CreateWidget<UUserWidget>(PC, DeadWidgetClass);
+	DeadWidget->AddToViewport();
+
+	DeadWidget->SetVisibility(ESlateVisibility::Visible);
+	PC->SetInputMode(FInputModeGameAndUI());
+	PC->bShowMouseCursor = true;
+
 }
 
 void ACPlayer::Begin_Roll()

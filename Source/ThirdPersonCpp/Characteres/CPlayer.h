@@ -15,6 +15,8 @@ class UCStateComponent;
 class UCMontagesComponent;
 class UCActionComponent;
 class UMaterialInstanceDynamic;
+class UPostProcessComponent;
+class UUserWidget
 
 UCLASS()
 class THIRDPERSONCPP_API ACPlayer : public ACharacter, public ICCharacterInterface, public IGenericTeamAgentInterface
@@ -101,6 +103,14 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
 	UCActionComponent* ActionComp;
 
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
+		UPostProcessComponent* PostProcessComp;
+
+	UPROPERTY()
+	UUserWidget* DeadWidget;
+
+	UPROPERTY()
+	TSubclassOf<UUserWidget> DeadWidgetClass;
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "TeamID")
 	uint8 TeamID;
