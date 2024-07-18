@@ -6,12 +6,12 @@
 
 class ACPatrolPath;
 
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class THIRDPERSONCPP_API UCPatrolComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:
+public:	
 	UCPatrolComponent();
 
 protected:
@@ -25,11 +25,11 @@ public:
 
 private:
 	UPROPERTY(EditInstanceOnly, Category = "AI")
-		ACPatrolPath* PatrolPath;
+	ACPatrolPath* PatrolPath;
 
 	UPROPERTY(EditInstanceOnly, Category = "AI")
-		int32 Index;
+	int32 Index;
 
 	UPROPERTY(EditInstanceOnly, Category = "AI")
-		bool bReverse;
+	bool bReverse;
 };

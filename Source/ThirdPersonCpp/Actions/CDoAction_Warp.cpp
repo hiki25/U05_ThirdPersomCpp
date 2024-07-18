@@ -1,7 +1,7 @@
 #include "CDoAction_Warp.h"
 #include "Global.h"
-#include "GameFramework/GamemodeBase.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/GameModeBase.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/CStateComponent.h"
@@ -21,7 +21,7 @@ void ACDoAction_Warp::BeginPlay()
 			break;
 		}
 	}
-
+	
 }
 
 void ACDoAction_Warp::Tick(float DeltaTime)
@@ -32,7 +32,6 @@ void ACDoAction_Warp::Tick(float DeltaTime)
 
 	CheckFalse(*bEquipped);
 	CheckFalse(IsPlayerClass());
-	
 
 	FVector CurLoc;
 	FRotator CurRot;
@@ -48,7 +47,8 @@ void ACDoAction_Warp::DoAction()
 {
 	Super::DoAction();
 
-	CheckFalse(StateComponent->IsIdleMode());
+	CheckFalse(StateComp->IsIdleMode());
+
 	if (IsPlayerClass())
 	{
 		FRotator Temp;
@@ -56,10 +56,10 @@ void ACDoAction_Warp::DoAction()
 	}
 	else
 	{
-		AController* AIC =  OwnerCharacter->GetController();
+		AController* AIC = OwnerCharacter->GetController();
 		if (AIC)
 		{
-			UCBehaviorComponent* BehaviorComp = CHelpers::GetComponent<UCBehaviorComponent>(AIC);
+			UCBehaviorComponent* BehaviorComp =CHelpers::GetComponent<UCBehaviorComponent>(AIC);
 			if (BehaviorComp)
 			{
 				Location = BehaviorComp->GetLocationKey();
@@ -67,9 +67,9 @@ void ACDoAction_Warp::DoAction()
 		}
 	}
 
-	StateComponent->SetActionMode();
+	StateComp->SetActionMode();
 	OwnerCharacter->PlayAnimMontage(Datas[0].AnimMontage, Datas[0].PlayRate, Datas[0].StartSection);
-	Datas[0].bCanMove ? AttributeComponent->SetMove() : AttributeComponent->SetStop();
+	Datas[0].bCanMove ? AttributeComp->SetMove() : AttributeComp->SetStop();
 
 	SetPreviewMeshColor(FLinearColor(20, 0, 0));
 }
@@ -80,7 +80,7 @@ void ACDoAction_Warp::Begin_DoAction()
 
 	FTransform Trasnform = Datas[0].EffectTransform;
 	Trasnform.AddToTranslation(OwnerCharacter->GetActorLocation());
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Datas[0].Effect, Trasnform);
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld() ,Datas[0].Effect, Trasnform);
 }
 
 void ACDoAction_Warp::End_DoAction()
@@ -90,8 +90,8 @@ void ACDoAction_Warp::End_DoAction()
 	Location.Z += OwnerCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
 	OwnerCharacter->SetActorLocation(Location);
 
-	StateComponent->SetIdleMode();
-	AttributeComponent->SetMove();
+	StateComp->SetIdleMode();
+	AttributeComp->SetMove();
 
 	SetPreviewMeshColor(FLinearColor(0, 20, 20));
 }
@@ -124,5 +124,5 @@ void ACDoAction_Warp::SetPreviewMeshColor(FLinearColor InColor)
 
 bool ACDoAction_Warp::IsPlayerClass()
 {
-	return (OwnerCharacter->GetClass() == GetWorld()->GetAuthGameMode()->DefaultPawnClass);
+	return (OwnerCharacter->GetClass()) == (GetWorld()->GetAuthGameMode()->DefaultPawnClass);
 }

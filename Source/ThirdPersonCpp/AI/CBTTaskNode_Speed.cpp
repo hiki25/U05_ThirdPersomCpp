@@ -11,15 +11,14 @@ EBTNodeResult::Type UCBTTaskNode_Speed::ExecuteTask(UBehaviorTreeComponent& Owne
 {
 	Super::ExecuteTask(OwnerComp, NodeMemory);
 
-	AAIController* AIC = Cast<AAIController>(OwnerComp.GetOwner());
-	//리턴값이 필요한 함수이기 때문에 NullResult
-	CheckNullResult(AIC,EBTNodeResult::Failed);
+	AAIController* AIC =  Cast<AAIController>(OwnerComp.GetOwner());
+	CheckNullResult(AIC, EBTNodeResult::Failed);
 
 	APawn* Pawn = AIC->GetPawn();
 	CheckNullResult(Pawn, EBTNodeResult::Failed);
 
-	UCAttributeComponent* AttirbuteComp = CHelpers::GetComponent<UCAttributeComponent>(Pawn);
-	AttirbuteComp->SetWalkSpeed(Type);
+	UCAttributeComponent* AttributeComp = CHelpers::GetComponent<UCAttributeComponent>(Pawn);
+	AttributeComp->SetWalkSpeed(Type);
 
 	return EBTNodeResult::Succeeded;
 }

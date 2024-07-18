@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Engine/DataTable.h"
-#include "CStateComponent.h"
+#include "Components/CStateComponent.h"
 #include "CMontagesComponent.generated.h"
 
 class UAnimMontage;
@@ -40,7 +40,7 @@ protected:
 
 public:
 	void PlayRoll();
-	void PlayBackStep();
+	void PlayBackstep();
 	void PlayHitted();
 	void PlayDead();
 
@@ -50,8 +50,7 @@ private:
 private:
 	UPROPERTY(EditDefaultsOnly)
 	UDataTable* DataTable;
-
+		
 private:
 	FMontageData* Datas[(int32)EStateType::Max];
-		
 };

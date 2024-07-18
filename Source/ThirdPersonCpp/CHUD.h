@@ -19,18 +19,19 @@ protected:
 
 public:
 	virtual void DrawHUD() override;
-	
+
 public:
 	void VisibleAim();
 	void InvisibleAim();
-
+	
 private:
 	UPROPERTY(EditDefaultsOnly)
 	UTexture2D* CrossHairTexture;
 
+
 private:
 	bool bVisibleAim;
+
 	UEnum* StateTypeAsUEnum;
 	UCStateComponent* StateComp;
-
 };

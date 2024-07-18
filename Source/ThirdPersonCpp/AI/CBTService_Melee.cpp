@@ -1,12 +1,11 @@
 #include "CBTService_Melee.h"
 #include "Global.h"
-#include "Characteres/CAIController.h"
-#include "Characteres/CEnemy_AI.h"
-#include "Characteres/CPlayer.h"
+#include "Characters/CAIController.h"
+#include "Characters/CEnemy_AI.h"
+#include "Characters/CPlayer.h"
 #include "Components/CBehaviorComponent.h"
 #include "Components/CStateComponent.h"
 #include "Components/CPatrolComponent.h"
-
 
 UCBTService_Melee::UCBTService_Melee()
 {
@@ -20,7 +19,7 @@ void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 
 	UCBehaviorComponent* BehaviorComp = CHelpers::GetComponent<UCBehaviorComponent>(AIC);
 
-	ACEnemy_AI*  EnemyPawn= Cast<ACEnemy_AI>(AIC->GetPawn());
+	ACEnemy_AI* EnemyPawn = Cast<ACEnemy_AI>(AIC->GetPawn());
 	CheckNull(EnemyPawn);
 
 	UCStateComponent* StateComp = CHelpers::GetComponent<UCStateComponent>(EnemyPawn);
@@ -36,10 +35,11 @@ void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 	//Try Get PlayerKey from BB
 	ACPlayer* Player = BehaviorComp->GetPlayerKey();
 
-	//No Sense
+	//Not Detected Player
 	if (Player == nullptr)
 	{
-	AIC->ClearFocus(EAIFocusPriority::Gameplay);
+		AIC->ClearFocus(EAIFocusPriority::Gameplay);
+
 		if (PatrolComp->IsPathValid())
 		{
 			BehaviorComp->SetPatrolMode();
@@ -50,7 +50,7 @@ void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 		return;
 	}
 
-	//Sensed Player
+	//Detected Player
 	float Distance = EnemyPawn->GetDistanceTo(Player);
 
 	if (Distance < AIC->GetBehaviorRange())
@@ -61,8 +61,6 @@ void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 
 	if (Distance < AIC->GetSightRadius())
 	{
-		BehaviorComp->SetApprochMode();
+		BehaviorComp->SetApproachMode();
 	}
-
-
 }
