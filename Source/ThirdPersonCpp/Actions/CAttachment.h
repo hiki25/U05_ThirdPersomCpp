@@ -26,36 +26,35 @@ public:
 	void OnEquip();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnUnequip();
+	void OnUnEquip();
 
 private:
 	UFUNCTION()
 	void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
 	UFUNCTION()
 	void OnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-		
+
 public:
 	void OnCollision();
 	void OffCollision();
-
-public:
-	UPROPERTY(BlueprintAssignable)
-	FAttachmentBeginOverlap OnAttachmentBeginOverlap;
-
-	UPROPERTY(BlueprintAssignable)
-	FAttachmentEndOverlap OnAttachmentEndOverlap;
 
 protected:
 	UFUNCTION(BlueprintCallable)
 	void ActorAttachTo(FName InSocketName);
 
 	UFUNCTION(BlueprintCallable)
-	void ComponentAttachTo(USceneComponent* InComp, FName InSocketName);
+		void ComponentAttachTo(USceneComponent* InComp,FName InSocketName);
+
+public:
+	UPROPERTY(BlueprintAssignable)
+	FAttachmentBeginOverlap OnAttachmentBeginOverlap;
+
+	UPROPERTY(BlueprintAssignable)
+		FAttachmentEndOverlap OnAttachmentEndOverlap;
 
 private:
 	UPROPERTY(VisibleDefaultsOnly)
-	USceneComponent* RootComp;
+		USceneComponent* RootComp;
 
 protected:
 	UPROPERTY(BlueprintReadOnly)
@@ -63,4 +62,5 @@ protected:
 
 private:
 	TArray<UShapeComponent*> Collisions;
+
 };

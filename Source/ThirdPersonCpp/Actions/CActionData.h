@@ -6,8 +6,8 @@
 
 class UAnimMontage;
 class ACEquipment;
-class ACAttachment;
 class ACDoAction;
+class ACAttachment;
 class ACharacter;
 class UParticleSystem;
 class UCameraShake;
@@ -19,46 +19,48 @@ struct FEquipmentData
 {
 	GENERATED_BODY()
 
+
+
 public:
 	UPROPERTY(EditDefaultsOnly)
-	UAnimMontage* AnimMontage;
+		UAnimMontage* AnimMontage;
 
 	UPROPERTY(EditDefaultsOnly)
-	float PlayRate = 1.f;
+		float PlayRate = 1.f;
 
 	UPROPERTY(EditDefaultsOnly)
-	FName StartSection;
+		FName StartSection;
 
 	UPROPERTY(EditDefaultsOnly)
-	bool bCanMove = true;
+		bool bCanMove = true;
 
 	UPROPERTY(EditDefaultsOnly)
-	bool bLookForward = true;
+		bool bLookForward = true;
 };
 
 USTRUCT(BlueprintType)
-struct FDoActionData : public FEquipmentData
+struct FDoActionData :public FEquipmentData
 {
 	GENERATED_BODY()
 
 public:
 	UPROPERTY(EditDefaultsOnly)
-	float Power = 1.f;
+		float Power = 1.f;
 
 	UPROPERTY(EditDefaultsOnly)
-	float HitStop;
+		float HitStop;
 
 	UPROPERTY(EditDefaultsOnly)
-	UParticleSystem* Effect;
+		UParticleSystem* Effect;
 
 	UPROPERTY(EditDefaultsOnly)
-	FTransform EffectTransform;
+		FTransform EffectTransform;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UCameraShake> ShakeClass;
+		TSubclassOf<UCameraShake> ShakeClass;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<ACProjectile> ProjectileClass;
+		TSubclassOf<ACProjectile> ProjectileClass;
 };
 
 UCLASS()
@@ -67,7 +69,7 @@ class THIRDPERSONCPP_API UCActionData : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	void BeginPlay(ACharacter* InOwnerCharacter, UCAction** OutAction);
+	void BeginPlay(ACharacter* InOnwerCharacter, UCAction** OutAction);
 
 private:
 	FString MakeActorLable(ACharacter* InOwnerCharacter, FString InMiddleName);
@@ -80,7 +82,7 @@ public:
 	FEquipmentData EquipmentData;
 
 	UPROPERTY(EditAnywhere, Category = "Equipment")
-	FLinearColor EquipmentColor;
+		FLinearColor EquipmentColor;
 
 	UPROPERTY(EditAnywhere, Category = "Attachment")
 	TSubclassOf<ACAttachment> AttachmentClass;
@@ -89,7 +91,8 @@ public:
 	TSubclassOf<ACDoAction> DoActionClass;
 
 	UPROPERTY(EditAnywhere, Category = "DoAction")
-	TArray<FDoActionData> DoActionDatas;
+	TArray<FDoActionData> DoActinoDatas;
 
 
+	
 };

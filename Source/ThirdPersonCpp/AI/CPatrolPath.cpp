@@ -5,9 +5,9 @@
 
 ACPatrolPath::ACPatrolPath()
 {
-	CHelpers::CreateSceneComponent(this, &RootComp, "RootComp");
-	CHelpers::CreateSceneComponent(this, &SplineComp, "SplineComp", RootComp);
-	CHelpers::CreateSceneComponent(this, &TextRenderComp, "TextRenderComp", RootComp);
+	CHelpers::CreateSceneComponent(this,&RootComp,"RootComp");
+	CHelpers::CreateSceneComponent(this,&SplineComp,"SplineComp", RootComp);
+	CHelpers::CreateSceneComponent(this,&TextRenderComp,"TextRenderComp", RootComp);
 
 	SplineComp->SetRelativeLocation(FVector(0, 0, 30));
 
@@ -18,7 +18,7 @@ ACPatrolPath::ACPatrolPath()
 
 void ACPatrolPath::OnConstruction(const FTransform& Transform)
 {
-	Super::OnConstruction(Transform);
+	Super::OnConstruction( Transform);
 
 	TextRenderComp->SetText(GetActorLabel());
 
@@ -28,7 +28,7 @@ void ACPatrolPath::OnConstruction(const FTransform& Transform)
 void ACPatrolPath::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	TextRenderComp->SetVisibility(false);
-}
 
+	TextRenderComp->SetVisibility(false);
+	
+}

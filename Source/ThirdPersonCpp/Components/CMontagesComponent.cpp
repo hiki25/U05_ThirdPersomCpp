@@ -1,10 +1,9 @@
 #include "CMontagesComponent.h"
-#include "Global.h"
 #include "GameFramework/Character.h"
+#include "Global.h"
 
 UCMontagesComponent::UCMontagesComponent()
 {
-
 }
 
 
@@ -14,16 +13,16 @@ void UCMontagesComponent::BeginPlay()
 
 	if (DataTable == nullptr)
 	{
-		CLog::Log("DataTable is not set");
+		CLog::Log("DataTable is not Set");
 		return;
 	}
-	
-	TArray<FMontageData*> FromDataTableAsset;
-	DataTable->GetAllRows<FMontageData>("", FromDataTableAsset);
+
+	TArray<FMontageData*> FromDatasTable;
+	DataTable->GetAllRows<FMontageData>("", FromDatasTable);
 
 	for (int32 i = 0; i < (int32)EStateType::Max; i++)
 	{
-		for (const auto& Data : FromDataTableAsset)
+		for (const auto& Data : FromDatasTable)
 		{
 			if ((EStateType)i == Data->Type)
 			{
@@ -32,6 +31,7 @@ void UCMontagesComponent::BeginPlay()
 			}
 		}
 	}
+
 }
 
 void UCMontagesComponent::PlayRoll()
@@ -39,7 +39,7 @@ void UCMontagesComponent::PlayRoll()
 	PlayAnimMontage(EStateType::Roll);
 }
 
-void UCMontagesComponent::PlayBackstep()
+void UCMontagesComponent::PlayBackStep()
 {
 	PlayAnimMontage(EStateType::Backstep);
 }
@@ -63,7 +63,6 @@ void UCMontagesComponent::PlayAnimMontage(EStateType InStateType)
 	const FMontageData* Data = Datas[(int32)InStateType];
 	if (Data && Data->AnimMontage)
 	{
-		Character->PlayAnimMontage(Data->AnimMontage, Data->PlayRate, Data->StartSection);
+			Character->PlayAnimMontage(Data->AnimMontage, Data->PlayRate, Data->StartSection);	
 	}
 }
-

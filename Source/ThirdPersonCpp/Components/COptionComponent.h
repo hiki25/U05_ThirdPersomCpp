@@ -13,29 +13,29 @@ class THIRDPERSONCPP_API UCOptionComponent : public UActorComponent
 public:	
 	UCOptionComponent();
 
-protected:
-	virtual void BeginPlay() override;
-
 public:
 	FORCEINLINE float GetMouseXRate() { return MouseXRate; }
 	FORCEINLINE float GetMouseYRate() { return MouseYRate; }
-	
+
+
 	FORCEINLINE float GetZoomSpeed() { return ZoomSpeed; }
 	FORCEINLINE float GetZoomMin() { return ZoomRange.X; }
 	FORCEINLINE float GetZoomMax() { return ZoomRange.Y; }
 
+protected:
+	virtual void BeginPlay() override;
+
 private:
 	UPROPERTY(EditAnywhere, Category = "Mouse")
-	float MouseXRate;
+		float MouseXRate;
+		
+	UPROPERTY(EditAnywhere, Category = "Mouse")
+		float MouseYRate;
 
 	UPROPERTY(EditAnywhere, Category = "Mouse")
-	float MouseYRate;
-
-	UPROPERTY(EditAnywhere, Category = "Mouse")
-	float ZoomSpeed;
+		float ZoomSpeed;
 
 	//X is min rate, Y is max rate
 	UPROPERTY(EditAnywhere, Category = "Mouse")
-	FVector2D ZoomRange;
-		
+		FVector2D ZoomRange;
 };

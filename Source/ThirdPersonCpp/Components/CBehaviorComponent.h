@@ -10,7 +10,7 @@ class ACPlayer;
 UENUM(BlueprintType)
 enum class EBehaviorType : uint8
 {
-	Wait, Approach, Action, Patrol, Hitted, Escape
+	Wait,Approch,Action,Patrol, Hitted, Escape
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -25,30 +25,25 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	void SetBlackboardComp(UBlackboardComponent* InComp);
+	void SetBlackboardComp(UBlackboardComponent* InBlackboardComp);
 
 public:
 	UFUNCTION(BlueprintPure)
 	bool IsWaitMode();
-
 	UFUNCTION(BlueprintPure)
-	bool IsApproachMode();
-
+		bool IsApprochMode();
 	UFUNCTION(BlueprintPure)
-	bool IsActionMode();
-
+		bool IsActionMode();
 	UFUNCTION(BlueprintPure)
-	bool IsPatrolMode();
-
+		bool IsPatrolMode();
 	UFUNCTION(BlueprintPure)
-	bool IsHittedMode();
-
+		bool IsHittedMode();
 	UFUNCTION(BlueprintPure)
-	bool IsEscapeMode();
+		bool IsEscapeMode();
 
 public:
 	void SetWaitMode();
-	void SetApproachMode();
+	void SetApprochMode();
 	void SetActionMode();
 	void SetPatrolMode();
 	void SetHittedMode();
@@ -61,16 +56,19 @@ private:
 	void ChangeType(EBehaviorType InNewType);
 	EBehaviorType GetType();
 
-private:
 	UPROPERTY(EditDefaultsOnly, Category = "Blackboard")
 	FName BehaviorKey;
 
+	//Read Only
 	UPROPERTY(EditDefaultsOnly, Category = "Blackboard")
 	FName PlayerKey;
 
+	//EQS, Read Only
 	UPROPERTY(EditDefaultsOnly, Category = "Blackboard")
 	FName LocationKey;
 
 private:
 	UBlackboardComponent* BlackboardComp;
+
+		
 };

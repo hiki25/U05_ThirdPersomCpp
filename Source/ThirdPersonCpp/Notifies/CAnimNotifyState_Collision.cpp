@@ -31,6 +31,7 @@ void UCAnimNotifyState_Collision::NotifyBegin(USkeletalMeshComponent* MeshComp, 
 void UCAnimNotifyState_Collision::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
 	Super::NotifyEnd(MeshComp, Animation);
+
 	CheckNull(MeshComp->GetOwner());
 
 	UCActionComponent* ActionComp = CHelpers::GetComponent<UCActionComponent>(MeshComp->GetOwner());
@@ -43,10 +44,11 @@ void UCAnimNotifyState_Collision::NotifyEnd(USkeletalMeshComponent* MeshComp, UA
 	CheckNull(Attachment);
 
 	Attachment->OffCollision();
-	
+
 	ACDoAction_Melee* DoAction_Melee = Cast<ACDoAction_Melee>(ActionData->GetDoAction());
 	CheckNull(DoAction_Melee);
-	
-	DoAction_Melee->ClearHittedCharacters();
+
+	DoAction_Melee->ClearHittedCharacter();
 }
+
 

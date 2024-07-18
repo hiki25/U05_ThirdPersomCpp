@@ -14,6 +14,7 @@ UCBTTaskNode_Patrol::UCBTTaskNode_Patrol()
 EBTNodeResult::Type UCBTTaskNode_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	Super::ExecuteTask(OwnerComp, NodeMemory);
+	//순찰경로 유무 체크
 
 	AAIController* AIC = Cast<AAIController>(OwnerComp.GetOwner());
 	CheckNullResult(AIC, EBTNodeResult::Failed);
@@ -22,7 +23,6 @@ EBTNodeResult::Type UCBTTaskNode_Patrol::ExecuteTask(UBehaviorTreeComponent& Own
 	CheckNullResult(Pawn, EBTNodeResult::Failed);
 
 	UCPatrolComponent* PatrolComp = CHelpers::GetComponent<UCPatrolComponent>(Pawn);
-
 	if (PatrolComp->IsPathValid() == false)
 	{
 		return EBTNodeResult::Failed;
@@ -33,6 +33,7 @@ EBTNodeResult::Type UCBTTaskNode_Patrol::ExecuteTask(UBehaviorTreeComponent& Own
 
 void UCBTTaskNode_Patrol::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
+	//이동
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 
 	AAIController* AIC = Cast<AAIController>(OwnerComp.GetOwner());

@@ -2,14 +2,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "ThirdPersonCPPGameModeBase.generated.h"
+#include "ThirdPersonCppGameModeBase.generated.h"
 
 UCLASS()
-class THIRDPERSONCPP_API AThirdPersonCPPGameModeBase : public AGameModeBase
+class THIRDPERSONCPP_API AThirdPersonCppGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
 public:
-	AThirdPersonCPPGameModeBase();
+	AThirdPersonCppGameModeBase();
+
 	
 };

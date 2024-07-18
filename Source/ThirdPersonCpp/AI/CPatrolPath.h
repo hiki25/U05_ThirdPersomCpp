@@ -11,8 +11,8 @@ UCLASS()
 class THIRDPERSONCPP_API ACPatrolPath : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	ACPatrolPath();
 
 	virtual void OnConstruction(const FTransform& Transform) override;
@@ -25,14 +25,14 @@ public:
 
 private:
 	UPROPERTY(VisibleDefaultsOnly)
-	USceneComponent* RootComp;
+		USceneComponent* RootComp;
 
 	UPROPERTY(VisibleDefaultsOnly)
-	USplineComponent* SplineComp;
+		USplineComponent* SplineComp;
 
 	UPROPERTY(VisibleDefaultsOnly)
-	UTextRenderComponent* TextRenderComp;
+		UTextRenderComponent* TextRenderComp;
 
 	UPROPERTY(EditInstanceOnly)
-	bool bClosedLoop;
+		bool bClosedLoop;
 };

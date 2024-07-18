@@ -22,10 +22,9 @@ protected:
 
 public:
 	virtual void Tick(float DeltaTime) override;
-
 public:
-	void SetDatas(const TArray<FDoActionData>& InDatas);
-	void SetEquipped(const bool* InEquipped);
+	void SetData(const TArray<FDoActionData>& InDatas);
+	void SetEquipment(const bool* InbEquipped);
 
 public:
 	virtual void DoAction() {};
@@ -39,20 +38,19 @@ public:
 
 public:
 	UFUNCTION()
-	virtual void OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter) {};
-
+		virtual void OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter) {};
 	UFUNCTION()
-	virtual void OnAttachmentEndOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter) {};
+		virtual void OnAttachmentEndOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter) {};
+
 
 protected:
 	UPROPERTY(BlueprintReadOnly)
 	ACharacter* OwnerCharacter;
-
 	UPROPERTY(BlueprintReadOnly)
-	UCAttributeComponent* AttributeComp;
-
+	UCAttributeComponent* AttributeComponent;
 	UPROPERTY(BlueprintReadOnly)
-	UCStateComponent* StateComp;
+		UCStateComponent* StateComponent;
+
 
 protected:
 	TArray<FDoActionData> Datas;

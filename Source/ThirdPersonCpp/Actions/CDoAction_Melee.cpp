@@ -4,6 +4,7 @@
 #include "Components/CStateComponent.h"
 #include "Components/CAttributeComponent.h"
 
+
 void ACDoAction_Melee::DoAction()
 {
 	Super::DoAction();
@@ -17,13 +18,15 @@ void ACDoAction_Melee::DoAction()
 		return;
 	}
 
-	CheckFalse(StateComp->IsIdleMode());
-	StateComp->SetActionMode();
 
-	OwnerCharacter->PlayAnimMontage(Datas[0].AnimMontage, Datas[0].PlayRate, Datas[0].StartSection);
-	Datas[0].bCanMove ? AttributeComp->SetMove() : AttributeComp->SetStop();
+	CheckFalse(StateComponent->IsIdleMode());
+	StateComponent->SetActionMode();
+
+	OwnerCharacter->PlayAnimMontage(Datas[0].AnimMontage,Datas[0].PlayRate,Datas[0].StartSection);
+	Datas[0].bCanMove ? AttributeComponent->SetMove() : AttributeComponent->SetStop();
 }
 
+//Play Next Action
 void ACDoAction_Melee::Begin_DoAction()
 {
 	Super::Begin_DoAction();
@@ -37,7 +40,7 @@ void ACDoAction_Melee::Begin_DoAction()
 	ComboCount = FMath::Clamp(ComboCount, 0, Datas.Num() - 1);
 
 	OwnerCharacter->PlayAnimMontage(Datas[ComboCount].AnimMontage, Datas[ComboCount].PlayRate, Datas[ComboCount].StartSection);
-	Datas[ComboCount].bCanMove ? AttributeComp->SetMove() : AttributeComp->SetStop();
+	Datas[ComboCount].bCanMove ? AttributeComponent->SetMove() : AttributeComponent->SetStop();
 }
 
 void ACDoAction_Melee::End_DoAction()
@@ -47,8 +50,8 @@ void ACDoAction_Melee::End_DoAction()
 	OwnerCharacter->StopAnimMontage();
 	ComboCount = 0;
 
-	StateComp->SetIdleMode();
-	AttributeComp->SetMove();
+	StateComponent->SetIdleMode();
+	AttributeComponent->SetMove();
 }
 
 void ACDoAction_Melee::EnableCombo()
@@ -61,37 +64,36 @@ void ACDoAction_Melee::DisableCombo()
 	bCanCombo = false;
 }
 
-void ACDoAction_Melee::ClearHittedCharacters()
+void ACDoAction_Melee::ClearHittedCharacter()
 {
 	HittedCharacters.Empty();
 }
 
-void ACDoAction_Melee::RestoreGlobalTimeDilation()
-{
-	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.f);
-}
 
 void ACDoAction_Melee::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter)
 {
 	Super::OnAttachmentBeginOverlap(InAttacker, InCauser, InOtherCharacter);
-
-	//Blocking Multiple Hit
-	int32 NuumberOfHittedCharacters = HittedCharacters.Num();
+	
+	//Blocking Multipe Hit
+	int32 NumberOfHittedCharacters = HittedCharacters.Num();
 	HittedCharacters.AddUnique(InOtherCharacter);
-	CheckFalse(NuumberOfHittedCharacters < HittedCharacters.Num());
+	CheckFalse(NumberOfHittedCharacters < HittedCharacters.Num());
 
-	//Take Damage
+	//TakeDamage
 	FDamageEvent DamageEvent;
 	InOtherCharacter->TakeDamage(Datas[ComboCount].Power, DamageEvent, InAttacker->GetController(), InCauser);
 
-	//HitStop
+	//Hit Stop
 	float HitStop = Datas[ComboCount].HitStop;
-	if (FMath::IsNearlyZero(HitStop) == false && UGameplayStatics::GetGlobalTimeDilation(GetWorld()) >= 1.f)
+
+	if (FMath::IsNearlyZero(HitStop) == false && UGameplayStatics::GetGlobalTimeDilation(GetWorld()) >= 1)
 	{
 		UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 0.02f);
 		UKismetSystemLibrary::K2_SetTimer(this, "RestoreGlobalTimeDilation", HitStop * 0.02f, false);
 	}
 
+
+	//CameraShake
 	TSubclassOf<UCameraShake> ShakeClass = Datas[ComboCount].ShakeClass;
 	if (ShakeClass)
 	{
@@ -102,17 +104,24 @@ void ACDoAction_Melee::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* 
 		}
 	}
 
-	//Hit Particle
+	//Hit Effect
 	UParticleSystem* HitEffect = Datas[ComboCount].Effect;
 	if (HitEffect)
 	{
-		FTransform Trasform = Datas[ComboCount].EffectTransform;
-		Trasform.AddToTranslation(InOtherCharacter->GetActorLocation());
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, Trasform);
+		FTransform Transform = Datas[ComboCount].EffectTransform;
+		Transform.AddToTranslation(InOtherCharacter->GetActorLocation());
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, Transform);
 	}
+
+	
 }
 
 void ACDoAction_Melee::OnAttachmentEndOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter)
 {
 	Super::OnAttachmentEndOverlap(InAttacker, InCauser, InOtherCharacter);
+}
+
+void ACDoAction_Melee::RestoreGlobalTimeDilation()
+{
+	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), 1.0f);
 }

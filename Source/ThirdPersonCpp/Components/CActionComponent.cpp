@@ -24,14 +24,16 @@ void UCActionComponent::BeginPlay()
 	{
 		if (DataAssets[i])
 		{
-			DataAssets[i]->BeginPlay(OwnerCharacter, &Datas[i]);
+			DataAssets[i]->BeginPlay(OwnerCharacter,&Datas[i]);
 		}
+		
 	}
+	
 }
 
 void UCActionComponent::DoAction()
 {
-	CheckTrue(IsUnarmedMode());
+	CheckTrue(IsUnArmedMode());
 
 	if (Datas[(int32)Type] && Datas[(int32)Type]->GetDoAction())
 	{
@@ -42,34 +44,16 @@ void UCActionComponent::DoAction()
 
 void UCActionComponent::DoSubAction(bool bBegin)
 {
-	CheckTrue(IsUnarmedMode());
+	CheckTrue(IsUnArmedMode());
 
 	if (Datas[(int32)Type] && Datas[(int32)Type]->GetDoAction())
 	{
 		ACDoAction* DoAction = Datas[(int32)Type]->GetDoAction();
-
 		bBegin ? DoAction->Begin_SubAction() : DoAction->End_SubAction();
 	}
 }
 
-void UCActionComponent::Abort()
-{
-	CheckNull(GetCurrentActionData());
-	CheckTrue(IsUnarmedMode());
-
-	if (GetCurrentActionData()->GetEquipment())
-	{
-		GetCurrentActionData()->GetEquipment()->Begin_Equip();
-		GetCurrentActionData()->GetEquipment()->End_Equip();
-	}
-	
-	if (GetCurrentActionData()->GetDoAction())
-	{
-		GetCurrentActionData()->GetDoAction()->Abort();
-	}
-}
-
-void UCActionComponent::OffAllCollsions()
+void UCActionComponent::OffAllCollision()
 {
 	for (const auto& DataAsset : Datas)
 	{
@@ -78,7 +62,6 @@ void UCActionComponent::OffAllCollsions()
 			DataAsset->GetAttachment()->OffCollision();
 		}
 	}
-
 }
 
 void UCActionComponent::DestoryAll()
@@ -91,13 +74,11 @@ void UCActionComponent::DestoryAll()
 			{
 				Datas[i]->GetDoAction()->Destroy();
 			}
-
 			if (Datas[i]->GetEquipment())
 			{
 				Datas[i]->GetEquipment()->Destroy();
 			}
-
-			if (Datas[i]->GetAttachment())
+			if(Datas[i]->GetAttachment())
 			{
 				Datas[i]->GetAttachment()->Destroy();
 			}
@@ -105,19 +86,36 @@ void UCActionComponent::DestoryAll()
 	}
 }
 
-void UCActionComponent::SetUnarmedMode()
+void UCActionComponent::Abort()
 {
-	if (Datas[(int32)Type] && Datas[(int32)Type]->GetEquipment())
+	CheckNull(GetCurrentActionData());
+	CheckTrue(IsUnArmedMode());
+
+	if (GetCurrentActionData()->GetEquipment())
 	{
-		Datas[(int32)Type]->GetEquipment()->Unequip();
+		GetCurrentActionData()->GetEquipment()->Begin_Equip();
+		GetCurrentActionData()->GetEquipment()->End_Equip();
 	}
 
-	if (Datas[(int32)EActionType::Unarmed] && Datas[(int32)EActionType::Unarmed]->GetEquipment())
+	if (GetCurrentActionData()->GetDoAction())
 	{
-		Datas[(int32)EActionType::Unarmed]->GetEquipment()->Equip();
+		GetCurrentActionData()->GetDoAction()->Abort();
+	}
+}
+
+void UCActionComponent::SetUnArmedMode()
+{
+	if(Datas[(int32)Type] && Datas[(int32)Type]->GetEquipment())
+	{
+		Datas[(int32)Type]->GetEquipment()->UnEquip();
 	}
 
-	ChangeType(EActionType::Unarmed);
+	if (Datas[(int32)EActionType::UnArmed]&& Datas[(int32)EActionType::UnArmed]->GetEquipment())
+	{
+		Datas[(int32)EActionType::UnArmed]->GetEquipment()->Equip();
+	}
+
+	ChangeType(EActionType::UnArmed);
 }
 
 void UCActionComponent::SetFistMode()
@@ -145,28 +143,30 @@ void UCActionComponent::SetWarpMode()
 	SetMode(EActionType::Warp);
 }
 
-void UCActionComponent::SetWhirlwindMode()
+void UCActionComponent::SetWhirlWindMode()
 {
-	SetMode(EActionType::Whirlwind);
+	SetMode(EActionType::WhirlWind);
 }
 
 void UCActionComponent::SetMode(EActionType InNewType)
 {
 	if (Type == InNewType)
 	{
-		SetUnarmedMode();
+		SetUnArmedMode();
 		return;
 	}
 
-	else if (IsUnarmedMode() == false)
+	else if (IsUnArmedMode() == false)
 	{
 		if (Datas[(int32)Type] && Datas[(int32)Type]->GetEquipment())
-			Datas[(int32)Type]->GetEquipment()->Unequip();
+		{
+			Datas[(int32)Type]->GetEquipment()->UnEquip();
+		}
 	}
-
 	if (Datas[(int32)InNewType] && Datas[(int32)InNewType]->GetEquipment())
+	{
 		Datas[(int32)InNewType]->GetEquipment()->Equip();
-
+	}
 
 	ChangeType(InNewType);
 }
@@ -175,6 +175,8 @@ void UCActionComponent::ChangeType(EActionType InNewType)
 {
 	EActionType Prev = Type;
 	Type = InNewType;
+
+	
 
 	if (OnActionTypeChanged.IsBound())
 	{

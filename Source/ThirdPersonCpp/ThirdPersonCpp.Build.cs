@@ -1,21 +1,19 @@
 using UnrealBuildTool;
 
-public class ThirdPersonCPP : ModuleRules
+public class ThirdPersonCpp : ModuleRules
 {
-	public ThirdPersonCPP(ReadOnlyTargetRules Target) : base(Target)
+	public ThirdPersonCpp(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
-		PublicIncludePaths.Add(ModuleDirectory);
 
+		PublicIncludePaths.Add(ModuleDirectory);
 		PublicDependencyModuleNames.AddRange(new string[] 
-		{
-			"Core",
+		{ "Core", 
 			"CoreUObject",
 			"Engine",
 			"InputCore",
-			"AIModule",
-			"GameplayTasks"
-		});
+			"AIModule" ,
+			"GameplayTasks"});
+
 	}
 }

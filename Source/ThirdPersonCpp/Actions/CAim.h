@@ -6,8 +6,8 @@
 #include "CAim.generated.h"
 
 class ACharacter;
-class USpringArmComponent;
 class UCameraComponent;
+class USpringArmComponent;
 class UCurveFloat;
 class ACHUD;
 
@@ -25,21 +25,22 @@ public:
 	void On();
 	void Off();
 
-	FORCEINLINE bool CanAim() { return SpringArmComp != nullptr && CameraComp != nullptr; }
+	FORCEINLINE bool CanAim() {return SpringArmComp != nullptr && CameraComp != nullptr; }
 	FORCEINLINE bool IsZooming() { return bZooming; }
 
 private:
 	UFUNCTION()
-	void OnProgress(float Output);
-
+		void ZoomIn(float Output);
 private:
 	ACharacter* OwnerCharacter;
-	USpringArmComponent* SpringArmComp;
 	UCameraComponent* CameraComp;
+	USpringArmComponent* SpringArmComp;
 
-	bool bZooming;
 	UCurveFloat* Curve;
+
 	FTimeline Timeline;
 
 	ACHUD* HUD;
+
+	bool bZooming;
 };

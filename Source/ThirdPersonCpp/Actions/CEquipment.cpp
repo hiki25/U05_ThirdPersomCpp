@@ -1,7 +1,7 @@
 #include "CEquipment.h"
 #include "Global.h"
-#include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Character.h"
 #include "Components/CStateComponent.h"
 #include "Components/CAttributeComponent.h"
 #include "Interfaces/CCharacterInterface.h"
@@ -14,10 +14,11 @@ ACEquipment::ACEquipment()
 void ACEquipment::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 	StateComp = CHelpers::GetComponent<UCStateComponent>(OwnerCharacter);
 	AttributeComp = CHelpers::GetComponent<UCAttributeComponent>(OwnerCharacter);
+	
 }
 
 void ACEquipment::SetData(const FEquipmentData& InData)
@@ -33,7 +34,6 @@ void ACEquipment::SetColor(const FLinearColor& InColor)
 void ACEquipment::Equip_Implementation()
 {
 	StateComp->SetEquipMode();
-
 	if (Data.AnimMontage)
 	{
 		OwnerCharacter->PlayAnimMontage(Data.AnimMontage, Data.PlayRate, Data.StartSection);
@@ -44,13 +44,13 @@ void ACEquipment::Equip_Implementation()
 		End_Equip();
 	}
 
-	if (Data.bLookForward == true)
+	if (Data.bLookForward)
 	{
-		OwnerCharacter->bUseControllerRotationYaw = true;
 		OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = false;
+		OwnerCharacter->bUseControllerRotationYaw = true;
 	}
 
-	Data.bCanMove ? AttributeComp->SetMove() : AttributeComp->SetStop();
+	(Data.bCanMove ? AttributeComp->SetMove() : AttributeComp->SetStop());
 
 	ICCharacterInterface* CharacterInterface = Cast<ICCharacterInterface>(OwnerCharacter);
 	CheckNull(CharacterInterface);
@@ -74,15 +74,16 @@ void ACEquipment::End_Equip_Implementation()
 	AttributeComp->SetMove();
 }
 
-void ACEquipment::Unequip_Implementation()
+void ACEquipment::UnEquip_Implementation()
 {
 	bEquipped = false;
 
-	OwnerCharacter->bUseControllerRotationYaw = false;
 	OwnerCharacter->GetCharacterMovement()->bOrientRotationToMovement = true;
+	OwnerCharacter->bUseControllerRotationYaw = false;
 
 	if (OnUnequipmentDelegate.IsBound())
 	{
 		OnUnequipmentDelegate.Broadcast();
 	}
 }
+

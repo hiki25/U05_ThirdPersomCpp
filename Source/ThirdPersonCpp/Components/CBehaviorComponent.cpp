@@ -1,6 +1,6 @@
 #include "CBehaviorComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Characters/CPlayer.h"
+#include "Characteres/CPlayer.h"
 
 UCBehaviorComponent::UCBehaviorComponent()
 {
@@ -17,9 +17,9 @@ void UCBehaviorComponent::BeginPlay()
 	
 }
 
-void UCBehaviorComponent::SetBlackboardComp(UBlackboardComponent* InComp)
+void UCBehaviorComponent::SetBlackboardComp(UBlackboardComponent* InBlackboardComp)
 {
-	BlackboardComp = InComp;
+	BlackboardComp = InBlackboardComp;
 }
 
 bool UCBehaviorComponent::IsWaitMode()
@@ -27,9 +27,9 @@ bool UCBehaviorComponent::IsWaitMode()
 	return GetType() == EBehaviorType::Wait;
 }
 
-bool UCBehaviorComponent::IsApproachMode()
+bool UCBehaviorComponent::IsApprochMode()
 {
-	return GetType() == EBehaviorType::Approach;
+	return GetType() == EBehaviorType::Approch;
 }
 
 bool UCBehaviorComponent::IsActionMode()
@@ -57,9 +57,9 @@ void UCBehaviorComponent::SetWaitMode()
 	ChangeType(EBehaviorType::Wait);
 }
 
-void UCBehaviorComponent::SetApproachMode()
+void UCBehaviorComponent::SetApprochMode()
 {
-	ChangeType(EBehaviorType::Approach);
+	ChangeType(EBehaviorType::Approch);
 }
 
 void UCBehaviorComponent::SetActionMode()
@@ -94,7 +94,7 @@ FVector UCBehaviorComponent::GetLocationKey()
 
 void UCBehaviorComponent::ChangeType(EBehaviorType InNewType)
 {
-	BlackboardComp->SetValueAsEnum(BehaviorKey, (uint8)InNewType);
+	BlackboardComp->SetValueAsEnum(BehaviorKey,(uint8)InNewType);
 }
 
 EBehaviorType UCBehaviorComponent::GetType()

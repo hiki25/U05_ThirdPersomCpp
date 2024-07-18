@@ -9,7 +9,7 @@ UCAttributeComponent::UCAttributeComponent()
 	WalkSpeeds[(int32)EWalkSpeedType::Sprint] = 600;
 
 	MaxHealth = 100.f;
-	
+
 	bCanMove = true;
 }
 
@@ -25,22 +25,12 @@ void UCAttributeComponent::IncreaseHealth(float InAmount)
 {
 	CurrentHealth += InAmount;
 	CurrentHealth = FMath::Clamp(CurrentHealth, 0.f, MaxHealth);
-
-	if (OnHealthChanged.IsBound())
-	{
-		OnHealthChanged.Broadcast();
-	}
 }
 
 void UCAttributeComponent::DecreaseHealth(float InAmount)
 {
 	CurrentHealth -= InAmount;
 	CurrentHealth = FMath::Clamp(CurrentHealth, 0.f, MaxHealth);
-
-	if (OnHealthChanged.IsBound())
-	{
-		OnHealthChanged.Broadcast();
-	}
 }
 
 void UCAttributeComponent::SetMove()
@@ -55,8 +45,8 @@ void UCAttributeComponent::SetStop()
 
 void UCAttributeComponent::SetWalkSpeed(EWalkSpeedType InWalkSpeed)
 {
-	UCharacterMovementComponent* MovementComp = CHelpers::GetComponent<UCharacterMovementComponent>(GetOwner());
-	CheckNull(MovementComp);
+	UCharacterMovementComponent* Movement = CHelpers::GetComponent<UCharacterMovementComponent>(GetOwner());
+	CheckNull(Movement);
 
-	MovementComp->MaxWalkSpeed = WalkSpeeds[(int32)InWalkSpeed];
+	Movement->MaxWalkSpeed = WalkSpeeds[(int32)InWalkSpeed];
 }

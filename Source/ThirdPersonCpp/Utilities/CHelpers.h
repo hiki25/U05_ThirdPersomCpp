@@ -2,24 +2,23 @@
 
 #include "CoreMinimal.h"
 
-#define CheckNull(p) { if (p == nullptr) return; }
-#define CheckNullResult(p, result) { if (p == nullptr) return result; }
+#define CheckNull(P) {if(P == nullptr) return;}
+#define CheckNullResult(P, result) {if(P == nullptr) return result;}
 
-#define CheckTrue(p) { if (p == true) return; }
-#define CheckTrueResult(p, result) { if (p == true) return result; }
+#define CheckTrue(P) {if(P == true) return;}
+#define CheckTrueResult(P, result) {if(P == true) return result;}
 
-#define CheckFalse(p) { if (p == false) return; }
-#define CheckFalseResult(p, result) { if (p == false) return result; }
+#define CheckFalse(P) {if(P == false) return;}
+#define CheckFalseResult(P, result) {if(P == false) return result;}
 
-
-class THIRDPERSONCPP_API CHelpers
+class THIRDPERSONCPP_API  CHelpers
 {
 public:
 	template<typename T>
 	static void GetAsset(T** OutAsset, FString InPath)
 	{
-		ConstructorHelpers::FObjectFinder<T> Asset(*InPath);
-		ensureMsgf(Asset.Succeeded(), TEXT("Asset Not Found"));
+		ConstructorHelpers::FObjectFinder<T>Asset(*InPath);
+		ensureMsgf(Asset.Succeeded(), TEXT("Asset Not Find"));
 
 		*OutAsset = Asset.Object;
 	}
@@ -37,8 +36,7 @@ public:
 	static void GetClass(TSubclassOf<T>* OutClass, FString InPath)
 	{
 		ConstructorHelpers::FClassFinder<T> Class(*InPath);
-		ensureMsgf(Class.Succeeded(), TEXT("Class Not Found"));
-
+		ensureMsgf(Class.Succeeded(), TEXT("Class Not Find"));
 		*OutClass = Class.Class;
 	}
 
@@ -51,14 +49,13 @@ public:
 	template<typename T>
 	static void CreateSceneComponent(AActor* InActor, T** OutComponent, FName InName, USceneComponent* InParent = nullptr)
 	{
-		*OutComponent = InActor->CreateDefaultSubobject<T>(InName);
-		
+		*OutComponent = InActor-> CreateDefaultSubobject<T>(InName);
+
 		if (InParent)
 		{
 			(*OutComponent)->SetupAttachment(InParent);
-			return;
+				return;
 		}
-		
 		InActor->SetRootComponent(*OutComponent);
 	}
 
@@ -67,4 +64,6 @@ public:
 	{
 		*OutComponent = InActor->CreateDefaultSubobject<T>(InName);
 	}
+
+
 };

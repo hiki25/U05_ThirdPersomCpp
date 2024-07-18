@@ -7,12 +7,12 @@
 
 FString UCAnimNotify_EndAction::GetNotifyName_Implementation() const
 {
-	return "EndAction";
+	return "End_Action";
 }
 
 void UCAnimNotify_EndAction::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
-	Super::Notify(MeshComp, Animation);
+
 	CheckNull(MeshComp->GetOwner());
 
 	UCActionComponent* ActionComp = CHelpers::GetComponent<UCActionComponent>(MeshComp->GetOwner());

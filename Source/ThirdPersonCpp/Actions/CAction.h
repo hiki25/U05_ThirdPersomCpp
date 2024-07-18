@@ -21,10 +21,11 @@ public:
 	FORCEINLINE ACAttachment* GetAttachment() { return Attachment; }
 	FORCEINLINE ACDoAction* GetDoAction() { return DoAction; }
 	FORCEINLINE FLinearColor GetEquipmentColor() { return EquipmentColor; }
-	
+
 private:
 	ACEquipment* Equipment;
 	ACAttachment* Attachment;
 	ACDoAction* DoAction;
 	FLinearColor EquipmentColor;
+	
 };

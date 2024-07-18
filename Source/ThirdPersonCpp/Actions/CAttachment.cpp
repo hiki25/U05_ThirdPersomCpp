@@ -5,7 +5,7 @@
 
 ACAttachment::ACAttachment()
 {
-	CHelpers::CreateSceneComponent(this, &RootComp, "RootComp");
+	CHelpers::CreateSceneComponent(this,&RootComp,"RootComp");
 }
 
 void ACAttachment::BeginPlay()
@@ -22,6 +22,8 @@ void ACAttachment::BeginPlay()
 	OffCollision();
 
 	Super::BeginPlay();
+
+	
 }
 
 void ACAttachment::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -33,7 +35,7 @@ void ACAttachment::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedCompon
 
 	if (OnAttachmentBeginOverlap.IsBound())
 	{
-		OnAttachmentBeginOverlap.Broadcast(OwnerCharacter, this, OtherCharacter);
+		OnAttachmentBeginOverlap.Broadcast(OwnerCharacter,this, OtherCharacter);
 	}
 }
 
@@ -69,7 +71,7 @@ void ACAttachment::ActorAttachTo(FName InSocketName)
 	AttachToComponent
 	(
 		OwnerCharacter->GetMesh(),
-		FAttachmentTransformRules(EAttachmentRule::KeepRelative, true),
+		FAttachmentTransformRules(EAttachmentRule::KeepRelative,true),
 		InSocketName
 	);
 }
