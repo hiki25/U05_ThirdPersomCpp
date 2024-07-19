@@ -16,25 +16,26 @@ void ACHUD::BeginPlay()
 	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	StateComp = CHelpers::GetComponent<UCStateComponent>(PlayerCharacter);
 
-	StateTypeAsUEnum = FindObject<UEnum>(ANY_PACKAGE,TEXT("EStateType"));
+	StateTypeAsUEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EStateType"));
 }
 
 void ACHUD::DrawHUD()
 {
 	Super::DrawHUD();
-	if(StateComp && StateTypeAsUEnum)
+
+	if (bShowState && StateComp && StateTypeAsUEnum)
 	{
-	FString StateTypeString = StateTypeAsUEnum->GetNameStringByValue((int64)StateComp ->GetType());
-	DrawText("CurrentState : " + StateTypeString, FLinearColor::Red, 10.0f, Canvas->ClipY - 30.f);
+		FString StateTypeString = StateTypeAsUEnum->GetNameStringByValue((int64)StateComp->GetType());
+		DrawText("CurrentState : " + StateTypeString, FLinearColor::Red, 10.f, Canvas->ClipY - 30.f);
 	}
 
+
 	CheckFalse(bVisibleAim);
-
-	FVector2D Center (Canvas->ClipX * 0.5f, Canvas->ClipY * 0.5f);
+	FVector2D Center(Canvas->ClipX * 0.5f, Canvas->ClipY * 0.5f);
 	FVector2D ImageHalfSize(CrossHairTexture->GetSizeX() * 0.5f, CrossHairTexture->GetSizeY() * 0.5f);
-
 	Center -= ImageHalfSize;
-	FCanvasTileItem Item( Center,CrossHairTexture->Resource,FLinearColor::White);
+
+	FCanvasTileItem Item(Center, CrossHairTexture->Resource, FLinearColor::White);
 	Item.BlendMode = SE_BLEND_Translucent;
 	Canvas->DrawItem(Item);
 }

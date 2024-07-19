@@ -5,12 +5,12 @@
 #include "CStateComponent.generated.h"
 
 UENUM(BlueprintType)
-enum class EStateType: uint8
+enum class EStateType : uint8
 {
-	Idle,Roll,Backstep,Equip,Action,Hitted,Dead,Max
+	Idle, Roll, Backstep, Equip, Action, Hitted, Dead, Max
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FStateTypeChanged, EStateType, InPreType, EStateType, InNewType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FStateTypeChanged, EStateType, InPrevType, EStateType, InNewType);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class THIRDPERSONCPP_API UCStateComponent : public UActorComponent
@@ -24,23 +24,29 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	FORCEINLINE EStateType GetType() { return Type; }
+	FORCEINLINE EStateType GetType() {return Type;}
 
 public:
 	UFUNCTION(BlueprintPure)
-		FORCEINLINE bool IsIdleMode() { return Type == EStateType::Idle; }
+	FORCEINLINE bool IsIdleMode() { return Type == EStateType::Idle; }
+
 	UFUNCTION(BlueprintPure)
-		FORCEINLINE bool IsRollMode() { return Type == EStateType::Roll; }
+	FORCEINLINE bool IsRollMode() { return Type == EStateType::Roll; }
+
 	UFUNCTION(BlueprintPure)
-		FORCEINLINE bool IsBackstepMode() { return Type == EStateType::Backstep; }
+	FORCEINLINE bool IsBackstepMode() { return Type == EStateType::Backstep; }
+
 	UFUNCTION(BlueprintPure)
-		FORCEINLINE bool IsEquipMode() { return Type == EStateType::Equip; }
+	FORCEINLINE bool IsEquipMode() { return Type == EStateType::Equip; }
+
 	UFUNCTION(BlueprintPure)
-		FORCEINLINE bool IsActionMode() { return Type == EStateType::Action; }
+	FORCEINLINE bool IsActionMode() { return Type == EStateType::Action; }
+
 	UFUNCTION(BlueprintPure)
-		FORCEINLINE bool IsHittedMode() { return Type == EStateType::Hitted; }
+	FORCEINLINE bool IsHittedMode() { return Type == EStateType::Hitted; }
+
 	UFUNCTION(BlueprintPure)
-		FORCEINLINE bool IsDeadMode() { return Type == EStateType::Dead; }
+	FORCEINLINE bool IsDeadMode() { return Type == EStateType::Dead; }
 
 	void SetIdleMode();
 	void SetRollMode();
@@ -51,13 +57,12 @@ public:
 	void SetDeadMode();
 
 private:
-	void ChahgeType(EStateType NewType);
+	void ChangeType(EStateType InNewType);
 
 public:
 	UPROPERTY(BlueprintAssignable)
 	FStateTypeChanged OnStateTypeChanged;
 
-public:	
+private:
 	EStateType Type;
-		
 };

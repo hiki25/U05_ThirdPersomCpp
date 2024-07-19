@@ -1,18 +1,17 @@
-#include "CAnimNotify_BackStepped.h"
+#include "CAnimNotify_Backstepped.h"
 #include "Global.h"
-#include "Characteres/CPlayer.h"
+#include "Characters/CPlayer.h"
 
-FString UCAnimNotify_BackStepped::GetNotifyName_Implementation() const
+FString UCAnimNotify_Backstepped::GetNotifyName_Implementation() const
 {
-	return "BackStepped";
+	return "Backstepped";
 }
 
-
-void UCAnimNotify_BackStepped::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
+void UCAnimNotify_Backstepped::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
 	Super::Notify(MeshComp, Animation);
 	CheckNull(MeshComp->GetOwner());
-
+	
 	ACPlayer* Player = Cast<ACPlayer>(MeshComp->GetOwner());
 	CheckNull(Player);
 

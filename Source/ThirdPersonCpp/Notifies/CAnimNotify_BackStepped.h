@@ -2,10 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimNotifies/AnimNotify.h"
-#include "CAnimNotify_BackStepped.generated.h"
+#include "CAnimNotify_Backstepped.generated.h"
 
 UCLASS()
-class THIRDPERSONCPP_API UCAnimNotify_BackStepped : public UAnimNotify
+class THIRDPERSONCPP_API UCAnimNotify_Backstepped : public UAnimNotify
 {
 	GENERATED_BODY()
 

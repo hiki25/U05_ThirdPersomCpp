@@ -7,12 +7,10 @@
 class UCActionData;
 class UCAction;
 
-
-
 UENUM(BlueprintType)
 enum class EActionType : uint8
 {
-	UnArmed,Fist,OneHand,TwoHand, MagicBall, Warp, WhirlWind,Max
+	Unarmed, Fist, OneHand, TwoHand, MagicBall, Warp, Whirlwind, Max
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FActionTypeChanged, EActionType, InPrevType, EActionType, InNewType);
@@ -28,20 +26,27 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-
 public:
 	void DoAction();
 
 	void DoSubAction(bool bBegin);
 
-	void OffAllCollision();
-	void DestoryAll();
-
 	void Abort();
+	void OffAllCollsions();
+	void DestoryAll();
 
 public:
 	UFUNCTION(BlueprintPure)
-	FORCEINLINE bool IsUnArmedMode() { return Type == EActionType::UnArmed; }
+	FORCEINLINE UCAction* GetCurrentActionData() { return Datas[(int32)Type]; }
+
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE UCActionData* GetCurrentActionDataAsset() { return DataAssets[(int32)Type]; }
+
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE bool IsUnarmedMode() { return Type == EActionType::Unarmed; }
+
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE bool IsFistMode() { return Type == EActionType::Fist; }
 
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool IsOneHandMode() { return Type == EActionType::OneHand; }
@@ -56,18 +61,11 @@ public:
 	FORCEINLINE bool IsWarpMode() { return Type == EActionType::Warp; }
 
 	UFUNCTION(BlueprintPure)
-	FORCEINLINE bool IsWhirlWindMode() { return Type == EActionType::WhirlWind; }
-
-public:
-	UFUNCTION(BlueprintPure)
-		FORCEINLINE UCAction* GetCurrentActionData() { return Datas[(int32)Type]; }
-
-	UFUNCTION(BlueprintPure)
-		FORCEINLINE UCActionData* GetCurrentActionDataAssets() { return DataAssets[(int32)Type]; }
+	FORCEINLINE bool IsWhirlwindMode() { return Type == EActionType::Whirlwind; }
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void SetUnArmedMode();
+	void SetUnarmedMode();
 
 	UFUNCTION(BlueprintCallable)
 	void SetFistMode();
@@ -80,11 +78,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetMagicBallMode();
-
+	
 	UFUNCTION(BlueprintCallable)
 	void SetWarpMode();
+
 	UFUNCTION(BlueprintCallable)
-	void SetWhirlWindMode();
+	void SetWhirlwindMode();
 
 private:
 	void SetMode(EActionType InNewType);
@@ -104,6 +103,4 @@ private:
 	UPROPERTY()
 	UCAction* Datas[(int32)EActionType::Max];
 
-
-		
 };

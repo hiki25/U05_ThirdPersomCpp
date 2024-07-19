@@ -1,6 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ThirdPersonCpp.h"
+#include "ThirdPersonCPP.h"
 #include "Modules/ModuleManager.h"
 
-IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, ThirdPersonCpp, "ThirdPersonCpp" );
+IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, ThirdPersonCPP, "ThirdPersonCPP" );

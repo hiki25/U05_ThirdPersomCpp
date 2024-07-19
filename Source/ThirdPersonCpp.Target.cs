@@ -1,15 +1,14 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class ThirdPersonCppTarget : TargetRules
+public class ThirdPersonCPPTarget : TargetRules
 {
-	public ThirdPersonCppTarget(TargetInfo Target) : base(Target)
+	public ThirdPersonCPPTarget( TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-
-		ExtraModuleNames.AddRange( new string[] { "ThirdPersonCpp" } );
+		ExtraModuleNames.AddRange( new string[] { "ThirdPersonCPP" } );
 	}
 }

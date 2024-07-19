@@ -7,7 +7,7 @@
 
 UCAim::UCAim()
 {
-	CHelpers::GetAsset(&Curve, "/Game/Game/Curve_Camera");
+	CHelpers::GetAsset(&Curve, "/Game/Game/Curve_Aim");
 }
 
 void UCAim::BeginPlay(ACharacter* InOwnerCharacter)
@@ -18,13 +18,14 @@ void UCAim::BeginPlay(ACharacter* InOwnerCharacter)
 	CameraComp = CHelpers::GetComponent<UCameraComponent>(OwnerCharacter);
 
 	FOnTimelineFloat OnProgressDelegate;
-	OnProgressDelegate.BindUFunction(this, "ZoomIn");
+	OnProgressDelegate.BindUFunction(this, "OnProgress");
 	Timeline.AddInterpFloat(Curve, OnProgressDelegate);
 
 	APlayerController* PC = OwnerCharacter->GetWorld()->GetFirstPlayerController();
 	CheckNull(PC);
-
+	
 	HUD = PC->GetHUD<ACHUD>();
+	
 }
 
 void UCAim::Tick(float DeltaTime)
@@ -45,7 +46,6 @@ void UCAim::On()
 	SpringArmComp->SocketOffset = FVector(0, 30, 10);
 	SpringArmComp->bEnableCameraLag = false;
 
-	//CameraComp->FieldOfView = 45.0f;
 	Timeline.PlayFromStart();
 }
 
@@ -60,13 +60,13 @@ void UCAim::Off()
 
 	SpringArmComp->TargetArmLength = 200.f;
 	SpringArmComp->SocketOffset = FVector::ZeroVector;
-	SpringArmComp->bEnableCameraLag = false;
+	SpringArmComp->bEnableCameraLag = true;
 
-	//CameraComp->FieldOfView = 90.0f;
+	CameraComp->FieldOfView = 90.f;
 	Timeline.ReverseFromEnd();
 }
 
-void UCAim::ZoomIn(float Output)
+void UCAim::OnProgress(float Output)
 {
 	CameraComp->FieldOfView = Output;
 }

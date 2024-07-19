@@ -4,12 +4,12 @@
 #include "EnvironmentQuery/EnvQueryTypes.h"
 #include "GameFramework/Character.h"
 #include "Components/CBehaviorComponent.h"
-#include "Characteres/CPlayer.h"
+#include "Characters/CPlayer.h"
 
 void UCEnvQueryContext_Player::ProvideContext(FEnvQueryInstance& QueryInstance, FEnvQueryContextData& ContextData) const
 {
 	Super::ProvideContext(QueryInstance, ContextData);
-
+	
 	ACharacter* Querior = Cast<ACharacter>(QueryInstance.Owner.Get());
 	if (Querior)
 	{
@@ -19,10 +19,11 @@ void UCEnvQueryContext_Player::ProvideContext(FEnvQueryInstance& QueryInstance, 
 			ACPlayer* Player = BehaviorComp->GetPlayerKey();
 			if (Player)
 			{
-			UEnvQueryItemType_Actor::SetContextHelper(ContextData,Player);
-			return;
+				UEnvQueryItemType_Actor::SetContextHelper(ContextData, Player);
+				return;
 			}
 		}
 	}
+
 	UEnvQueryItemType_Actor::SetContextHelper(ContextData, Querior);
 }

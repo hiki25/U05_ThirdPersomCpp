@@ -1,12 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "CLog.h"
-DEFINE_LOG_CATEGORY_STATIC(GameProject,Display,All)
+
+DEFINE_LOG_CATEGORY_STATIC(GameProject, Display, All)
 
 void CLog::Print(int32 InValue, int32 InKey, float InDuration, FColor InColor)
 {
-	GEngine->AddOnScreenDebugMessage(InKey, InDuration, InColor, FString :: FromInt(InValue));
+	GEngine->AddOnScreenDebugMessage(InKey, InDuration, InColor, FString::FromInt(InValue));
 }
 
 void CLog::Print(float InValue, int32 InKey, float InDuration, FColor InColor)
@@ -29,29 +27,29 @@ void CLog::Print(const FRotator& InValue, int32 InKey, float InDuration, FColor 
 	GEngine->AddOnScreenDebugMessage(InKey, InDuration, InColor, InValue.ToString());
 }
 
-void CLog::Log(int32 Invalue)
+void CLog::Log(int32 InValue)
 {
-	UE_LOG(GameProject,Display,TEXT("%d"),Invalue);
+	UE_LOG(GameProject, Display, TEXT("%d"), InValue);
 }
 
-void CLog::Log(float Invalue)
+void CLog::Log(float InValue)
 {
-	UE_LOG(GameProject, Display, TEXT("%f"), Invalue);
+	UE_LOG(GameProject, Display, TEXT("%f"), InValue);
 }
 
-void CLog::Log(const FString& Invalue)
+void CLog::Log(const FString& InValue)
 {
-	UE_LOG(GameProject, Display, TEXT("%s"), *Invalue);
+	UE_LOG(GameProject, Display, TEXT("%s"), *InValue);
 }
 
-void CLog::Log(const FVector& Invalue)
+void CLog::Log(const FVector& InValue)
 {
-	UE_LOG(GameProject, Display, TEXT("%s"), *Invalue.ToString());
+	UE_LOG(GameProject, Display, TEXT("%s"), *InValue.ToString());
 }
 
-void CLog::Log(const FRotator& Invalue)
+void CLog::Log(const FRotator& InValue)
 {
-	UE_LOG(GameProject, Display, TEXT("%s"), *Invalue.ToString());
+	UE_LOG(GameProject, Display, TEXT("%s"), *InValue.ToString());
 }
 
 void CLog::Log(const UObject* InObject)
@@ -62,7 +60,7 @@ void CLog::Log(const UObject* InObject)
 		str.Append(InObject->GetName());
 	}
 
-	str.Append(InObject ? "is Not null" : "Null");
+	str.Append(InObject ? " is not null" : "NULL");
 
 	UE_LOG(GameProject, Display, TEXT("%s"), *str);
 }

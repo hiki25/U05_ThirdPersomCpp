@@ -29,15 +29,13 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FProjectileBeginOverlap OnProjectileBeginOverlap;
 
-
 private:
 	UPROPERTY(VisibleDefaultsOnly)
 	USphereComponent* SphereComp;
 
 	UPROPERTY(VisibleDefaultsOnly)
-	UParticleSystemComponent*  ParticleComp;
+	UParticleSystemComponent* ParticleComp;
 
 	UPROPERTY(VisibleDefaultsOnly)
 	UProjectileMovementComponent* ProjectileComp;
-
 };

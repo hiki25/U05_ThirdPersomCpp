@@ -14,24 +14,21 @@ struct FFeetData
 
 public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	FVector LeftDistance; //왼발이 얼마나 공간에 떠있냐를 저장하는 변수
+	FVector LeftDistance;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	FVector RightDistance;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	FVector PevisDistance;
+	FVector PelvisDistance;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	FRotator LeftRotation;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	FRotator RightRotation;
-
-
-
-
 };
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class THIRDPERSONCPP_API UCFeetComponent : public UActorComponent
@@ -61,21 +58,20 @@ protected:
 	FName RightFootSocketName;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "InverseKinemetics")
-		float Additional; 
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "InverseKinemetics")
-		float FootHeight;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "InverseKinemetics")
-		float InterpSpeed;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "InverseKinemetics")
 	TEnumAsByte<EDrawDebugTrace::Type> DrawDebugType;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "InverseKinemetics")
+	float Additional;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "InverseKinemetics")
+	float FootHeight;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "InverseKinemetics")
+	float InterpSpeed;
 
 private:
 	FFeetData Data;
 
 	ACharacter* OwnerCharacter;
-	float CapsulHalfHeight;
+	float CapsuleHalfHeight;
 };

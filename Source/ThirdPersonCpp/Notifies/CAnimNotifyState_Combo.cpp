@@ -25,8 +25,6 @@ void UCAnimNotifyState_Combo::NotifyBegin(USkeletalMeshComponent* MeshComp, UAni
 	CheckNull(DoAction_Melee);
 
 	DoAction_Melee->EnableCombo();
-
-
 }
 
 void UCAnimNotifyState_Combo::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)

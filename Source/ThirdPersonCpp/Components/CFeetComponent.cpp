@@ -3,7 +3,6 @@
 #include "GameFramework/Character.h"
 #include "Components/CapsuleComponent.h"
 
-
 UCFeetComponent::UCFeetComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -11,11 +10,11 @@ UCFeetComponent::UCFeetComponent()
 	LeftFootSocketName = "Foot_L";
 	RightFootSocketName = "Foot_R";
 
+	DrawDebugType = EDrawDebugTrace::ForOneFrame;
+
 	Additional = 55.f;
 	FootHeight = 7.5f;
 	InterpSpeed = 16.f;
-
-	DrawDebugType = EDrawDebugTrace::ForOneFrame;
 }
 
 
@@ -24,8 +23,7 @@ void UCFeetComponent::BeginPlay()
 	Super::BeginPlay();
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
-	CapsulHalfHeight = OwnerCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
-	
+	CapsuleHalfHeight = OwnerCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
 }
 
 
@@ -43,13 +41,13 @@ void UCFeetComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 	float Floating = FMath::Min(LeftDistance, RightDistance);
 
-	Data.PevisDistance.Z = UKismetMathLibrary::FInterpTo(Data.PevisDistance.Z, Floating,DeltaTime,InterpSpeed);
-	//Bone Space
-	//Lerp
-	Data.LeftDistance.X = UKismetMathLibrary::FInterpTo(Data.LeftDistance.X, (LeftDistance- Floating),DeltaTime,InterpSpeed);
-	Data.RightDistance.X = UKismetMathLibrary::FInterpTo(Data.RightDistance.X, -(RightDistance - Floating),DeltaTime,InterpSpeed);
+	Data.PelvisDistance.Z = UKismetMathLibrary::FInterpTo(Data.PelvisDistance.Z, Floating, DeltaTime, InterpSpeed);
 
+	Data.LeftDistance.X = UKismetMathLibrary::FInterpTo(Data.LeftDistance.X, (LeftDistance - Floating), DeltaTime, InterpSpeed);
+	Data.RightDistance.X = UKismetMathLibrary::FInterpTo(Data.RightDistance.X, -(RightDistance - Floating), DeltaTime, InterpSpeed);
 
+	Data.LeftRotation = UKismetMathLibrary::RInterpTo(Data.LeftRotation, LeftRotation, DeltaTime, InterpSpeed);
+	Data.RightRotation = UKismetMathLibrary::RInterpTo(Data.RightRotation, RightRotation, DeltaTime, InterpSpeed);
 }
 
 void UCFeetComponent::Trace(FName InSocketName, float& OutDistance, FRotator& OutRotation)
@@ -58,35 +56,40 @@ void UCFeetComponent::Trace(FName InSocketName, float& OutDistance, FRotator& Ou
 
 	FVector SocketLocation = OwnerCharacter->GetMesh()->GetSocketLocation(InSocketName);
 	FVector Start = FVector(SocketLocation.X, SocketLocation.Y, OwnerCharacter->GetActorLocation().Z);
+	
+	float TraceZ = Start.Z - CapsuleHalfHeight - Additional;
+	FVector End = FVector(SocketLocation.X, SocketLocation.Y, TraceZ);
 
-	float TraceZ = Start.Z - CapsulHalfHeight - Additional;
-	FVector End = FVector(SocketLocation.X, SocketLocation.Y,TraceZ);
+	TArray<AActor*> Ignores;
+	Ignores.Add(OwnerCharacter);
 
-
-	TArray<AActor*>Ignore;
-	Ignore.Add(OwnerCharacter);
-
-	FHitResult HitResult;
-
+	FHitResult Hit;
 	UKismetSystemLibrary::LineTraceSingle
-	(GetWorld(),
+	(
+		GetWorld(),
 		Start,
 		End,
 		UEngineTypes::ConvertToTraceType(ECC_Visibility),
 		true,
-		Ignore,
+		Ignores,
 		DrawDebugType,
-		HitResult,
+		Hit,
 		true
-		);
+	);
 
-	CheckFalse(HitResult.bBlockingHit);
+	CheckFalse(Hit.bBlockingHit);
 
-	float Length = (HitResult.ImpactPoint - HitResult.TraceEnd).Size();
-  	OutDistance = FootHeight + Length - Additional;
+	float Length = (Hit.ImpactPoint - Hit.TraceEnd).Size();
+	OutDistance = FootHeight + Length - Additional;
 
-	//Todo
-	FVector ImpactNormal = HitResult.ImpactNormal;
-	OutRotation = ImpactNormal.Rotation();
+	FVector ImpactNormal = Hit.ImpactNormal;
+
+	float Pitch = -UKismetMathLibrary::DegAtan2(ImpactNormal.X, ImpactNormal.Z);
+	float Roll = UKismetMathLibrary::DegAtan2(ImpactNormal.Y, ImpactNormal.Z);
+
+	Pitch = FMath::Clamp(Pitch, -30.f, 30.f);
+	Roll = FMath::Clamp(Roll, -15.f, 15.f);
+
+	OutRotation = FRotator(Pitch, 0.f, Roll);
 }
 
